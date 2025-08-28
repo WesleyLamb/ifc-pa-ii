@@ -1,0 +1,78 @@
+services:
+  nginx:
+    depends_on:
+      - api
+      - front
+    image: nginx:latest
+    container_name: cemei_inteligente.nginx
+    tty: true
+    ports:
+      - "89:80"
+    env_file: .env
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/templates
+      - ./api:/var/www/app
+    restart: unless-stopped
+    networks:
+      cemei_inteligente:
+        ipv4_address: "172.16.3.2"
+  db:
+    image: postgres
+    container_name: cemei_inteligente.db
+    tty: true
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    ports:
+      - "5435:5432"
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      cemei_inteligente:
+        ipv4_address: "172.16.3.3"
+  api:
+    depends_on:
+      - db
+    working_dir: /var/www/app
+    environment:
+      - APP_URL=${BASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: cemei_inteligente.api
+    tty: true
+    volumes:
+      - ./api:/var/www/app
+    restart: unless-stopped
+    networks:
+      cemei_inteligente:
+        ipv4_address: "172.16.3.10"
+  front:
+    depends_on:
+      - api
+    working_dir: /var/www/front
+    image: node
+    container_name: cemei_inteligente.front
+    tty: true
+    volumes:
+      - ./front:/var/www/front
+    command: sh -c "npm run dev -- --host 0.0.0.0 --port 9001"
+    restart: unless-stopped
+    networks:
+      cemei_inteligente:
+        ipv4_address: "172.16.3.11"
+
+networks:
+  cemei_inteligente:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.16.3.0/24"
+          gateway: "172.16.3.1"
