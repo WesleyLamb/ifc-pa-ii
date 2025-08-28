@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\StoreUserRequest;
+use App\Http\Requests\V1\TokenRequest;
 use App\Services\V1\AuthService;
 use App\Services\Contracts\V1\AuthServiceInterface;
 use Illuminate\Http\Request;
@@ -17,23 +19,13 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function token(Request $request)
+    public function register(StoreUserRequest $request)
     {
-        return $this->authService->token($request);
-    }
-
-    public function refreshToken(Request $request)
-    {
-        return new NotImplementedException();
-    }
-
-    public function register(Request $request)
-    {
-        return new NotImplementedException();
+        return $this->authService->register($request);
     }
 
     public function forgotPassword(Request $request)
     {
-        return new NotImplementedException();
+        return $this->authService->forgotPassword($request);
     }
 }

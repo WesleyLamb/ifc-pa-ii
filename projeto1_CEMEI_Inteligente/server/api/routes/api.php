@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
     Route::group(['prefix' => 'auth', 'name' => 'auth'], function() {
-        Route::post('token', [AuthController::class, 'token'])->name('token');
-        Route::post('refresh-token', [AuthController::class, 'refreshToken'])->name('refresh-token');
         Route::post('register', [AuthController::class, 'register'])->name('register');
         Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
     });
