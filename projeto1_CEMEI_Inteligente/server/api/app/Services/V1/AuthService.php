@@ -35,6 +35,7 @@ class AuthService implements AuthServiceInterface
 
     public function forgotPassword(Request $request): JsonResponse
     {
+        // TODO: Verifica se funfa
         $status = Password::sendResetLink($request->only('email'));
         // if ($status === Password::RESET_LINK_SENT)
 
