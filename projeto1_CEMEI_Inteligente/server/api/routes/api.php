@@ -44,16 +44,16 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
                 Route::put('', [KidController::class, 'update'])->name('.update')->middleware('can:kids.change');
                 Route::delete('', [KidController::class, 'delete'])->name('.delete')->middleware('can:kids.delete');
             });
+        });
 
-            Route::group(['prefix' => 'classes', 'name' => 'classes'], function() {
-                Route::get('', [ClassController::class, 'index']);
-                Route::post('', [ClassController::class, 'store']);
+        Route::group(['prefix' => 'classes', 'name' => '.classes'], function() {
+            Route::get('', [ClassController::class, 'index'])->name('.index')->middleware('can:classes.index');
+            Route::post('', [ClassController::class, 'store'])->name('.store')->middleware('can:classes.create');
 
-                Route::group(['prefix' => '{class_id}'], function() {
-                    Route::get('', [ClassController::class, 'show']);
-                    Route::put('', [ClassController::class, 'update']);
-                    Route::delete('', [ClassController::class, 'delete']);
-                });
+            Route::group(['prefix' => '{class_id}'], function() {
+                Route::get('', [ClassController::class, 'show'])->name('.show')->middleware('can:classes.detail');
+                Route::put('', [ClassController::class, 'update'])->name('.update')->middleware('can:classes.change');
+                Route::delete('', [ClassController::class, 'delete'])->name('.delete')->middleware('can:classes.delete');
             });
         });
     });

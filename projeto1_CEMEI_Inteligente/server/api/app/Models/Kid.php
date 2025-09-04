@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\DTO\FilterDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -32,5 +33,10 @@ class Kid extends Model
             'vespertino' => '2',
             'integral' => '3'
         };
+    }
+
+    protected function scopeFilter(Builder $q, FilterDTO $filter)
+    {
+        return $q;
     }
 }

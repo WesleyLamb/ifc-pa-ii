@@ -2,11 +2,14 @@
 
 namespace App\Services\V1;
 
+use App\DTO\FilterDTO;
+use App\DTO\PaginatorDTO;
 use App\DTO\StoreKidDTO;
 use App\DTO\UpdateKidDTO;
 use App\Http\Requests\V1\StoreKidRequest;
 use App\Http\Requests\V1\UpdateKidRequest;
 use App\Http\Resources\V1\KidResource;
+use App\Http\Resources\V1\KidSummaryResource;
 use App\Repositories\Contracts\V1\KidRepositoryInterface;
 use App\Repositories\V1\KidRepository;
 use App\Services\Contracts\V1\KidServiceInterface;
@@ -26,7 +29,7 @@ class KidService implements KidServiceInterface
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        return KidResource::collection($this->kidRepository->getAll());
+        return KidSummaryResource::collection($this->kidRepository->getAll(FilterDTO::fromRequest($request), PaginatorDTO::fromRequest($request)));
     }
 
     public function store(StoreKidRequest $request): KidResource
