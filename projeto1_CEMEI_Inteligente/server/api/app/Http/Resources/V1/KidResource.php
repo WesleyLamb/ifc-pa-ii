@@ -14,6 +14,18 @@ class KidResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->uuid,
+            'library_identifier' => $this->library_identifier,
+            'name' => $this->name,
+            'birthday' => $this->birthday,
+            'father_name' => $this->father_name,
+            'mother_name' => $this->mother_name,
+            'cpf' => $this->cpf,
+            'turn' => ucfirst($this->turnString),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'active' => $this->deleted_at ? false : true,
+        ];
     }
 }

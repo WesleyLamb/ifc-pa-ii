@@ -20,4 +20,9 @@ class UserRepository implements UserRepositoryInterface
 
         return $user->refresh();
     }
+
+    public function getByIdOrFail(string $userId): User
+    {
+        return User::where('uuid', $userId)->firstOrFail();
+    }
 }

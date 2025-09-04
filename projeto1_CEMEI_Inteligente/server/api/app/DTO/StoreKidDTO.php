@@ -14,8 +14,7 @@ class StoreKidDTO
     public string $fatherName;
     public string $motherName;
     public string $cpf;
-    public KidTurn $turn;
-
+    public string $turn;
 
     public static function fromRequest(StoreKidRequest $request): self
     {
@@ -26,7 +25,7 @@ class StoreKidDTO
         $dto->birthday = new DateTimeImmutable($request->get('birthday'));
         $dto->fatherName = $request->get('father_name');
         $dto->motherName = $request->get('mother_name');
-        $dto->cpf = $request->get('cpf');
+        $dto->cpf = preg_replace('/\D+/', '', $request->get('cpf'));
         $dto->turn = $request->get('turn');
 
         return $dto;

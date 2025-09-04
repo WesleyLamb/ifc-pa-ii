@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Services\Contracts\V1\AuthServiceInterface;
+use App\Services\Contracts\V1\KidServiceInterface;
+use App\Services\Contracts\V1\UserServiceInterface;
 use App\Services\V1\AuthService;
+use App\Services\V1\KidService;
+use App\Services\V1\UserService;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceServiceProvider extends ServiceProvider
@@ -18,6 +22,16 @@ class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthServiceInterface::class,
             AuthService::class
+        );
+
+        $this->app->bind(
+            KidServiceInterface::class,
+            KidService::class
+        );
+
+        $this->app->bind(
+            UserServiceInterface::class,
+            UserService::class
         );
     }
 

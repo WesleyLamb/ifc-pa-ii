@@ -43,4 +43,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function permissions()
+    {
+        return $this->hasMany(UserPermission::class, 'user_id', 'id');
+    }
+
+    public function can($abilities, $arguments = [])
+    {
+        $grantedPermissions = [];
+        $abilitiesArr = explode('.', $abilities);
+        for ($i = 0; $i < substr_count($abilities, '.') + 1; $i++) {
+            $grantedPermissions[$i] = null;
+            for ($j = 0; $j < $i; $j++) {
+                $grantedPermissions[$i] .= $abilitiesArr[$j] . '.';
+            }
+            $grantedPermissions[$i] .= '*';
+        }
+        $grantedPermissions[] = $abilities;
+
+        $permission = $this->permissions()->whereIn('permission', $grantedPermissions)->first();
+        return $permission == true;
+    }
 }

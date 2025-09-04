@@ -6,8 +6,7 @@ use App\DTO\StoreUserDTO;
 use App\Exceptions\AuthException;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\V1\UserResource;
-use App\Repositories\Contracts\V1\UserRepositoryInterface as V1UserRepositoryInterface;
-use App\Repositories\V1\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\V1\UserRepositoryInterface;
 use App\Repositories\V1\UserRepository;
 use App\Services\Contracts\V1\AuthServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +20,7 @@ class AuthService implements AuthServiceInterface
 {
     public UserRepository $userRepository;
 
-    public function __construct(V1UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }

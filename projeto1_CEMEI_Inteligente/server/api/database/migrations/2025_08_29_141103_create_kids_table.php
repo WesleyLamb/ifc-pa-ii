@@ -27,6 +27,8 @@ return new class extends Migration
             $table->char('turn', 1)->comment('1 - Matutino; 2 - Vespertino; 3 - Integral');
 
             $table->timestamps();
+            $table->unique('library_identifier');
+            $table->unique('cpf');
         });
     }
 

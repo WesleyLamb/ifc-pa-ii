@@ -2,6 +2,8 @@
 
 namespace App\Services\V1;
 
+use App\DTO\StoreKidDTO;
+use App\DTO\UpdateKidDTO;
 use App\Http\Requests\V1\StoreKidRequest;
 use App\Http\Requests\V1\UpdateKidRequest;
 use App\Http\Resources\V1\KidResource;
@@ -24,28 +26,27 @@ class KidService implements KidServiceInterface
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        throw new NotImplementedException();
-        // return KidResource::collection($this->kidRepository->index());
+        return KidResource::collection($this->kidRepository->getAll());
     }
 
     public function store(StoreKidRequest $request): KidResource
     {
-        throw new NotImplementedException();
-        // return new KidResource($this->kidRepository->store(StoreKidDTO::fromRequest($request)));
+        return new KidResource($this->kidRepository->createKid(StoreKidDTO::fromRequest($request)));
     }
 
     public function show(Request $request): KidResource
     {
-        throw new NotImplementedException();
+        return new KidResource($this->kidRepository->getKidByIdOrFail($request->route('kid_id')));
     }
 
     public function update(UpdateKidRequest $request): KidResource
     {
-        throw new NotImplementedException();
+        return new KidResource($this->kidRepository->updateKid($request->route('kid_id'), UpdateKidDTO::fromRequest($request)));
     }
 
     public function delete(Request $request): JsonResponse
     {
-        throw new NotImplementedException();
+        $this->kidRepository->deleteKid($request->route('kid_id'));
+        return response()->json([], 204);
     }
 }
