@@ -16,4 +16,6 @@ interface KidRepositoryInterface
     public function getKidByIdOrFail(string $kidId): Kid;
     public function updateKid(string $kidId, UpdateKidDTO $dto): Kid;
     public function deleteKid(string $kidId): void;
+
+    public function getByClassId(string $classId, FilterDTO $filter, PaginatorDTO $paginator): LengthAwarePaginator;
 }

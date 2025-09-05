@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\AddKidToClassRequest;
+use App\Http\Requests\V1\AddUserToClassRequest;
 use App\Http\Requests\V1\StoreClassRequest;
 use App\Http\Requests\V1\UpdateClassRequest;
 use App\Http\Resources\V1\ClassResource;
@@ -42,5 +44,35 @@ class ClassController extends Controller
     public function delete(Request $request)
     {
         return $this->classService->delete($request);
+    }
+
+    public function indexKids(Request $request)
+    {
+        return $this->classService->indexKids($request);
+    }
+
+    public function addKid(AddKidToClassRequest $request)
+    {
+        return $this->classService->addKid($request);
+    }
+
+    public function deleteKid(Request $request)
+    {
+        return $this->classService->deleteKid($request);
+    }
+
+    public function indexUsers(Request $request)
+    {
+        return $this->classService->indexUsers($request);
+    }
+
+    public function storeUser(AddUserToClassRequest $request)
+    {
+        return $this->classService->addUser($request);
+    }
+
+    public function deleteUser(Request $request)
+    {
+        return $this->classService->deleteUser($request);
     }
 }

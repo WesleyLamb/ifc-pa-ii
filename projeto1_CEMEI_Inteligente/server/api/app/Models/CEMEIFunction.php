@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CEMEIClass extends Model
+class CEMEIFunction extends Model
 {
-    use HasUuids, SoftDeletes;
+    use SoftDeletes, HasUuids;
 
-    public $table = 'classes';
+    public $table = 'functions';
     public $primaryKey = 'uuid';
 
-    protected function scopeFilter(Builder $q, FilterDTO $filter)
+    public function scopeFilter(Builder $q, FilterDTO $filter)
     {
         return $q;
     }

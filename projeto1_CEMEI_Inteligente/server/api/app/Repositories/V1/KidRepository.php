@@ -74,4 +74,11 @@ class KidRepository implements KidRepositoryInterface
         $kid = $this->getKidByIdOrFail($kidId);
         $kid->delete();
     }
+
+    public function getByClassId(string $classId, FilterDTO $filter, PaginatorDTO $paginator): LengthAwarePaginator
+    {
+        return Kid::filter($filter)->whereHas('classes', function($q) use ($classId) {
+            $q->where('uuid', $classId);
+        })->paginate($paginator->perPage);
+    }
 }

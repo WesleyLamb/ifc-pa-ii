@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\FunctionController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\ClassController;
 use App\Http\Controllers\V1\KidController;
@@ -32,7 +33,8 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
 
     Route::group(['middleware' => 'auth:api'], function() {
         Route::group(['prefix' => 'users', 'name' => '.users'], function () {
-            Route::get('{user_id}', [UserController::class, 'show'])->name('.me');
+            Route::get('', [UserController::class, 'index'])->name('.index')->middleware('can:users.index');
+            Route::get('{user_id}', [UserController::class, 'show'])->name('.show');
         });
 
         Route::group(['prefix' => 'kids', 'name' => '.kids'], function() {
@@ -46,6 +48,12 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
             });
         });
 
+        Route::group(['prefix' => 'functions', 'name' => '.functions'], function() {
+            Route::get('', [FunctionController::class, 'index'])->name('.index')->middleware('can:functions.index');
+            Route::post('', [FunctionController::class, 'store'])->name('.store')->middleware('can:functions.create');
+
+        });
+
         Route::group(['prefix' => 'classes', 'name' => '.classes'], function() {
             Route::get('', [ClassController::class, 'index'])->name('.index')->middleware('can:classes.index');
             Route::post('', [ClassController::class, 'store'])->name('.store')->middleware('can:classes.create');
@@ -54,6 +62,23 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
                 Route::get('', [ClassController::class, 'show'])->name('.show')->middleware('can:classes.detail');
                 Route::put('', [ClassController::class, 'update'])->name('.update')->middleware('can:classes.change');
                 Route::delete('', [ClassController::class, 'delete'])->name('.delete')->middleware('can:classes.delete');
+
+                Route::group(['prefix' => 'kids', 'name' => '.kids'], function() {
+                    Route::get('', [ClassController::class, 'indexKids'])->name('.index')->middleware('can:kids.index');
+                    Route::post('', [ClassController::class, 'addKid'])->name('.store')->middleware('can:kids.change');
+
+                    Route::group(['prefix' => '{kid_id}'], function() {
+                        Route::delete('', [ClassController::class, 'deleteKid'])->name('.delete')->middleware('can:kids.change');
+                    });
+                });
+
+                Route::group(['prefix' => 'users', 'name' => '.users'], function() {
+                    Route::get('', [ClassController::class, 'indexUsers'])->name('.index')->middleware('can:users.index');
+                    Route::post('', [ClassController::class, 'storeUser'])->name('.store')->middleware('can:user.change');
+                    Route::group(['prefix' => '{user_id}'], function() {
+                        Route::delete('', [ClassController::class, 'deleteUser'])->name('.delete')->middleware('can:users.change');
+                    });
+                });
             });
         });
     });

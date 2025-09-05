@@ -35,6 +35,11 @@ class Kid extends Model
         };
     }
 
+    public function classes()
+    {
+        return $this->hasManyThrough(CEMEIClass::class, ClassKid::class, 'kid_id', 'id', 'id', 'class_id');
+    }
+
     protected function scopeFilter(Builder $q, FilterDTO $filter)
     {
         return $q;

@@ -4,7 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\DTO\FilterDTO;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,6 +51,11 @@ class User extends Authenticatable
         return $this->hasMany(UserPermission::class, 'user_id', 'id');
     }
 
+    public function classes()
+    {
+        return $this->hasManyThrough(CEMEIClass::class, ClassUser::class, 'user_id', 'id', 'id', 'class_id');
+    }
+
     public function can($abilities, $arguments = [])
     {
         $grantedPermissions = [];
@@ -64,5 +71,10 @@ class User extends Authenticatable
 
         $permission = $this->permissions()->whereIn('permission', $grantedPermissions)->first();
         return $permission == true;
+    }
+
+    public function scopeFilter(Builder $q, FilterDTO $filter)
+    {
+        return $q;
     }
 }
