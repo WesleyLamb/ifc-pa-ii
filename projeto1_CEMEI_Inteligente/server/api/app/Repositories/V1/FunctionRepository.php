@@ -5,6 +5,7 @@ namespace App\Repositories\V1;
 use App\DTO\FilterDTO;
 use App\DTO\PaginatorDTO;
 use App\DTO\StoreFunctionDTO;
+use App\DTO\UpdateFunctionDTO;
 use App\Models\CEMEIFunction;
 use App\Repositories\Contracts\V1\FunctionRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -29,5 +30,21 @@ class FunctionRepository implements FunctionRepositoryInterface
     public function getByIdOrFail(string $functionId): CEMEIFunction
     {
         return CEMEIFunction::where('uuid', $functionId)->firstOrFail();
+    }
+
+    public function update(string $functionId, UpdateFunctionDTO $dto)
+    {
+        $function = $this->getByIdOrFail($functionId);
+        if ($dto->nameWasChanged)
+            $function->name = $dto->name;
+
+        $function->save();
+
+        return $function->refresh();
+    }
+
+    public function delete(string $functionId): void
+    {
+        $this->getByIdOrFail($functionId)->delete();
     }
 }

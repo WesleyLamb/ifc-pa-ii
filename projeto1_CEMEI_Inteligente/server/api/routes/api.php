@@ -51,7 +51,11 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
         Route::group(['prefix' => 'functions', 'name' => '.functions'], function() {
             Route::get('', [FunctionController::class, 'index'])->name('.index')->middleware('can:functions.index');
             Route::post('', [FunctionController::class, 'store'])->name('.store')->middleware('can:functions.create');
-
+            Route::group(['prefix' => '{function_id}'], function() {
+                Route::get('', [FunctionController::class, 'show'])->name('.show')->middleware('can:functions.detail');
+                Route::put('', [FunctionController::class, 'update'])->name('.update')->middleware('can:functions.change');
+                Route::delete('', [FunctionController::class, 'delete'])->name('.delete')->middleware('can:functions.delete');
+            });
         });
 
         Route::group(['prefix' => 'classes', 'name' => '.classes'], function() {

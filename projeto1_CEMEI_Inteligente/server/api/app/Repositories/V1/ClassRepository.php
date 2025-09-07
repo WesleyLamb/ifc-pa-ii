@@ -55,9 +55,7 @@ class ClassRepository implements ClassRepositoryInterface
 
     public function deleteClass(string $classId): void
     {
-        $class = $this->getClassByIdOrFail($classId);
-
-        $class->delete();
+        $this->getClassByIdOrFail($classId)->delete();
     }
 
     public function AddKid(string $classId, AddKidToClassDTO $dto): Kid
