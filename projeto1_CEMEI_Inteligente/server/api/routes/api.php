@@ -28,7 +28,8 @@ use Psy\Command\ListCommand\ClassConstantEnumerator;
 Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
     Route::group(['prefix' => 'auth', 'name' => 'auth'], function() {
         Route::post('register', [AuthController::class, 'register'])->name('register');
-        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('.forgot-password');
+        Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('.reset-password');
     });
 
     Route::group(['middleware' => 'auth:api'], function() {
