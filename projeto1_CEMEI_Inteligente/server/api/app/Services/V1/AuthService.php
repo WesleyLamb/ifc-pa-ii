@@ -2,16 +2,21 @@
 
 namespace App\Services\V1;
 
+use App\DTO\StoreUserDTO;
 use App\Exceptions\AuthException;
+use App\Http\Requests\V1\ForgotPasswordRequest;
+use App\Http\Requests\V1\ResetPasswordRequest;
+use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\V1\UserResource;
+use App\Repositories\Contracts\V1\UserRepositoryInterface;
+use App\Repositories\V1\UserRepository;
 use App\Services\Contracts\V1\AuthServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Laravel\Passport\Bridge\UserRepository;
-use Laravel\Passport\Client;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Illuminate\Support\Facades\Password;
 use Nette\NotImplementedException;
 
 class AuthService implements AuthServiceInterface
@@ -23,37 +28,34 @@ class AuthService implements AuthServiceInterface
         $this->userRepository = $userRepository;
     }
 
-    public function token(Request $request): JsonResponse
+    public function register(StoreUserRequest $request): UserResource
     {
-        // $client = Client::where('password_client', 1)->first();
-        $http = Http::asForm()->post('http://nginx/oauth/token', [
-            'grant_type' => 'password',
-            'client_id' => $request->get('client_id'),
-            'client_secret' => $request->get('client_secret'),
-            'username' => $request->get('username') ?? $request->get('email'),
-            'password' => $request->get('password'),
-            'scope' => '*',
-        ]);
+        $user = $this->userRepository->createUser(StoreUserDTO::fromRequest($request));
 
-        if ($http->status() != 200) {
-            Log::error('Error trying to authenticate ' . $request->get('username') . ': ' . json_encode($http->json()));
-            throw new AuthException($http->json()['message'], 101);
-        }
-        return response()->json($http->json());
+        return new UserResource($user);
     }
 
-    public function refreshToken(Request $request): JsonResponse
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
-        throw new NotImplementedException();
+        // TODO: Verifica se funfa
+        $status = Password::sendResetLink($request->only('email'));
+        dd($status);
+        // if ($status === Password::RESET_LINK_SENT)
+
+        return response()->json(['message' => __($status)], Password::RESET_LINK_SENT ? 200 : 400);
     }
 
-    public function register(Request $request): UserResource
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
-        throw new NotImplementedException();
-    }
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function($user, $password) {
+                $user->password = Hash::make($password);
 
-    public function forgotPassword(Request $request): JsonResponse
-    {
-        throw new NotImplementedException();
+                $user->save();
+            }
+        );
+
+        return response()->json(['message' => __($status)], $status == Password::PASSWORD_RESET ? 200 : 400);
     }
 }
