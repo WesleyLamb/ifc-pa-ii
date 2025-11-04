@@ -1,8 +1,8 @@
 class User {
-  final String uuid;
+  final String id;
 
   final String accessToken;
   final String refreshToken;
 
-  User(this.uuid, this.accessToken, this.refreshToken);
+  User(this.id, this.accessToken, this.refreshToken);
 }

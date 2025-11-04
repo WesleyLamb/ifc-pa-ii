@@ -39,7 +39,7 @@ class AuthService implements AuthServiceInterface
     {
         // TODO: Verifica se funfa
         $status = Password::sendResetLink($request->only('email'));
-        dd($status);
+        // dd($status);
         // if ($status === Password::RESET_LINK_SENT)
 
         return response()->json(['message' => __($status)], Password::RESET_LINK_SENT ? 200 : 400);
