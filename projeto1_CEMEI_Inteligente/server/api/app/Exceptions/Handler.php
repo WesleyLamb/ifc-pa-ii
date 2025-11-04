@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
+use ReflectionClass;
 
 class Handler extends ExceptionHandler
 {
@@ -43,8 +46,20 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
+        $this->renderable(function (ValidationException $e) {
             //
+            return response()->json([
+                'exception' => (new ReflectionClass($e))->getShortName(),
+                'message' => $e->getMessage(),
+                'details' => $e->errors()
+            ]);
+        });
+
+        $this->renderable(function (Exception $e) {
+            return response()->json([
+                'exception' => (new ReflectionClass($e))->getShortName(),
+                'message' => $e->getMessage(),
+            ]);
         });
     }
 }
