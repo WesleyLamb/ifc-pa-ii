@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class SigninPage extends StatelessWidget {
-  const SigninPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  static const routeName = '/login';
 
   @override
   Widget build(BuildContext context) {
