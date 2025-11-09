@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'exception' => (new ReflectionClass($e))->getShortName(),
                 'message' => $e->getMessage(),
-            ]);
+            ], 500);
         });
     }
 }

@@ -1,16 +1,17 @@
-// import 'package:app/login_page.dart';
-// import 'package:app/repositories/authentication_repository.dart';
-import 'package:app/pages/initial_page.dart';
+import 'package:app/constants/strings.dart';
+import 'package:app/providers/auth_provider.dart';
+import 'package:app/ui/pages/dashboard_page.dart';
+import 'package:app/ui/pages/initial_load_page.dart';
+import 'package:app/router.dart';
+import 'package:app/ui/pages/initial_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+
+List<SingleChildWidget> _providers = [Provider(create: (_) => AuthProvider())];
 
 void main() async {
-  // final authRepository = AuthenticationRepository();
-  // final auth = await authRepository.auth(
-  //   email: 'wesley.lamb@castorsoft.com.br',
-  //   password: 'yametekudasai',
-  // );
-
-  runApp(const MainApp());
+  runApp(MultiProvider(providers: _providers, child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -33,7 +34,9 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const InitialPage(),
+      title: AppStrings.appName,
+      initialRoute: InitialLoadPage.routeName,
+      routes: AppRouter.routes,
     );
   }
 }

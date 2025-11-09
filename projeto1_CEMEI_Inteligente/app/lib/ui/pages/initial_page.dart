@@ -1,13 +1,25 @@
-import 'package:app/components/buttons/primary_button.dart';
-import 'package:app/components/buttons/secondary_button.dart';
-import 'package:app/components/subtitle_text.dart';
-import 'package:app/components/title_text.dart';
-import 'package:app/pages/login_page.dart';
-import 'package:app/pages/signin_page.dart';
+import 'package:app/ui/components/buttons/primary_button.dart';
+import 'package:app/ui/components/buttons/secondary_button.dart';
+import 'package:app/ui/components/texts/subtitle_text.dart';
+import 'package:app/ui/components/texts/title_text.dart';
+import 'package:app/ui/pages/login_page.dart';
+import 'package:app/ui/pages/register_page.dart';
 import 'package:flutter/material.dart';
 
-class InitialPage extends StatelessWidget {
+class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
+
+  static const routeName = '/';
+
+  @override
+  State<InitialPage> createState() => _InitialPageState();
+}
+
+class _InitialPageState extends State<InitialPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +57,12 @@ class InitialPage extends StatelessWidget {
                       },
                     ),
                     SecondaryButton(
-                      text: 'Cadastrar',
+                      label: 'Cadastrar',
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SigninPage(),
+                            builder: (context) => const RegisterPage(),
                           ),
                         );
                       },
