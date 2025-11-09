@@ -1,5 +1,5 @@
+import 'package:app/ui/pages/dashboard_page.dart';
 import 'package:app/ui/pages/initial_page.dart';
-import 'package:app/ui/pages/login_page.dart';
 import 'package:app/providers/auth_provider.dart';
 import 'package:app/ui/widgets/spinner.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class _InitialLoadPageState extends State<InitialLoadPage> {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (_, __, ___) =>
-              user == null ? const LoginPage() : const InitialPage(),
+              user == null ? const InitialPage() : const DashboardPage(),
           transitionDuration: Duration.zero,
         ),
       );
@@ -36,7 +36,7 @@ class _InitialLoadPageState extends State<InitialLoadPage> {
       await Navigator.of(
         context,
         rootNavigator: true,
-      ).pushReplacementNamed(LoginPage.routeName);
+      ).pushReplacementNamed(InitialPage.routeName);
     }
   }
 

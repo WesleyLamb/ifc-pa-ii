@@ -1,14 +1,20 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+const _storage = FlutterSecureStorage();
+
+Future<String?> get(String key) async => _storage.read(key: key);
+void set(String key, String value) async =>
+    _storage.write(key: key, value: value);
+
+
 // final GetStorage storage = GetStorage('Preferences');
 
-// void _set(String key, dynamic value) => storage.write(key, value);
 
-// T? _get<T>(String key) => storage.read(key);
 
 // void _delete(String key) => storage.remove(key);
 
 // set host(String? url) => _set('hostUrl', url);
 
-// String? get host => _get<String>('hostUrl');
 
 // String? get apiBaseUrl => host == null ? null : '$host/api';
 

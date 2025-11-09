@@ -1,7 +1,9 @@
 import 'package:app/constants/strings.dart';
 import 'package:app/providers/auth_provider.dart';
+import 'package:app/ui/pages/dashboard_page.dart';
 import 'package:app/ui/pages/initial_load_page.dart';
 import 'package:app/router.dart';
+import 'package:app/ui/pages/initial_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';

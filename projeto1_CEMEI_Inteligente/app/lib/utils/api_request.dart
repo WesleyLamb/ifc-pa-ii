@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:app/constants/strings.dart';
 import 'package:app/exceptions/exceptions.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as Http;
+import 'package:app/utils/storage.dart' as Storage;
 
 enum HttpMethod { get, post, patch, put, delete }
 
@@ -15,9 +15,8 @@ Future<dynamic> request(
 }) async {
   late Http.Response response;
 
-  Uri uri = Uri.parse('${AppStrings.baseUrl}/$path');
-  const storage = FlutterSecureStorage();
-  String? apiToken = await storage.read(key: AppStrings.accessTokenStorageKey);
+  Uri uri = Uri.parse('${AppStrings.host}/$path');
+  String? apiToken = await Storage.get(AppStrings.accessTokenStorageKey);
 
   Map<String, String> headers = {
     HttpHeaders.contentTypeHeader: ContentType.json.mimeType,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SecondaryButton extends StatelessWidget {
-  final String text;
+  final String label;
   final VoidCallback? onPressed;
 
   const SecondaryButton({
     super.key,
-    required this.text,
+    required this.label,
     required this.onPressed,
   });
 
@@ -22,7 +22,7 @@ class SecondaryButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed ?? () {},
-      child: Text(text, style: TextStyle(fontWeight: FontWeight.w600)),
+      child: Text(label, style: TextStyle(fontWeight: FontWeight.w600)),
     );
   }
 }
