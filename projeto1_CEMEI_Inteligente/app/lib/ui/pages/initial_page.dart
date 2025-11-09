@@ -38,7 +38,7 @@ class _InitialPageState extends State<InitialPage> {
               SizedBox(height: 50),
               TitleText(text: 'CEMEI Inteligente'),
               SizedBox(height: 25),
-              SubtitleText(text: 'Entre ou cadastre-se para continuar'),
+              // SubtitleText(text: 'Entre ou cadastre-se para continuar'),
               SizedBox(height: 50),
               SizedBox(
                 width: 200,
