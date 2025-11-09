@@ -18,7 +18,7 @@ class User {
   );
 
   static User fromJson(Map<String, dynamic> json) {
-    DateTime? emailVerifiedAt = json['email_verified_at']
+    DateTime? emailVerifiedAt = json['email_verified_at'] != null
         ? DateTime.parse(json['email_verified_at'])
         : null;
     DateTime? createdAt = DateTime.parse(json['created_at']);

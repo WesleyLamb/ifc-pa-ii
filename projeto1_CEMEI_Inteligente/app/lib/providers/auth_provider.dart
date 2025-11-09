@@ -62,7 +62,7 @@ class AuthProvider {
   }
 
   Future<User> getUser(String uuid) async {
-    var response = await ApiRequest.get('api/users/$uuid');
+    var response = await ApiRequest.get('api/v1/users/$uuid');
 
     return User.fromJson(response['data']);
   }
