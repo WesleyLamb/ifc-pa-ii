@@ -1,5 +1,6 @@
 // import 'package:app/login_page.dart';
 // import 'package:app/repositories/authentication_repository.dart';
+import 'package:app/pages/home_page.dart';
 import 'package:app/pages/initial_page.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const InitialPage(),
+      home: const HomePage(),
     );
   }
 }

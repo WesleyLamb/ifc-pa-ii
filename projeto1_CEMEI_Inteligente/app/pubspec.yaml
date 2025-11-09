@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   http:
+  salomon_bottom_bar:
 
 dev_dependencies:
   flutter_test:

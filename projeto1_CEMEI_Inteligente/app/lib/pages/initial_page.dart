@@ -26,7 +26,7 @@ class InitialPage extends StatelessWidget {
               SizedBox(height: 50),
               TitleText(text: 'CEMEI Inteligente'),
               SizedBox(height: 25),
-              SubtitleText(text: 'Entre ou cadastre-se para continuar'),
+              // SubtitleText(text: 'Entre ou cadastre-se para continuar'),
               SizedBox(height: 50),
               SizedBox(
                 width: 200,
