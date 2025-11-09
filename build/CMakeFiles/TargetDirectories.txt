@@ -1,0 +1,10 @@
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/CMakeFiles/INSTALL.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/flutter/CMakeFiles/flutter_wrapper_app.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/flutter/CMakeFiles/flutter_assemble.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/flutter/CMakeFiles/INSTALL.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/runner/CMakeFiles/app.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/runner/CMakeFiles/INSTALL.dir
+C:/Users/PC/Documents/dev/proj-apl-ii/ifc-pa-ii/build/runner/CMakeFiles/ALL_BUILD.dir
