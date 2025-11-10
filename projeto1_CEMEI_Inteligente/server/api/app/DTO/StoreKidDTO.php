@@ -15,6 +15,7 @@ class StoreKidDTO
     public string $motherName;
     public string $cpf;
     public string $turn;
+    public string $classId;
 
     public static function fromRequest(StoreKidRequest $request): self
     {
@@ -27,6 +28,7 @@ class StoreKidDTO
         $dto->motherName = $request->get('mother_name');
         $dto->cpf = preg_replace('/\D+/', '', $request->get('cpf'));
         $dto->turn = $request->get('turn');
+        $dto->classId = $request->get('class_id');
 
         return $dto;
     }

@@ -55,11 +55,11 @@ class Handler extends ExceptionHandler
             ]);
         });
 
-        $this->renderable(function (Exception $e) {
-            return response()->json([
-                'exception' => (new ReflectionClass($e))->getShortName(),
-                'message' => $e->getMessage(),
-            ], 500);
-        });
+        // $this->renderable(function (Exception $e) {
+        //     return response()->json([
+        //         'exception' => (new ReflectionClass($e))->getShortName(),
+        //         'message' => $e->getMessage(),
+        //     ], 500);
+        // });
     }
 }
