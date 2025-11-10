@@ -6,6 +6,7 @@ Future<String?> get(String key) async => _storage.read(key: key);
 void set(String key, String value) async =>
     _storage.write(key: key, value: value);
 
+Future<void> remove(String key) async => _storage.delete(key: key);
 
 // final GetStorage storage = GetStorage('Preferences');
 

@@ -4,7 +4,7 @@ import 'package:app/providers/auth_provider.dart';
 import 'package:app/ui/components/buttons/primary_button.dart';
 import 'package:app/ui/components/form_fields/password_input_form_field.dart';
 import 'package:app/ui/components/form_fields/text_input_form_field.dart';
-import 'package:app/ui/pages/dashboard_page.dart';
+import 'package:app/ui/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/utils/storage.dart' as Storage;
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                       .token(_email, _password)
                       .then(
                         (response) => {
-                          Navigator.pushNamed(context, DashboardPage.routeName),
+                          Navigator.pushNamed(context, HomePage.routeName),
                         },
                       );
                 },

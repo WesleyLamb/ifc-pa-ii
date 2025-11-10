@@ -1,12 +1,28 @@
 import 'package:app/constants/strings.dart';
 import 'package:app/models/user.dart';
+import 'package:app/services/api_service.dart';
 import 'package:app/utils/api_request.dart' as ApiRequest;
 import 'package:app/utils/storage.dart' as Storage;
+import 'package:flutter/material.dart';
 
-class AuthProvider {
-  late User _authUser;
+class AuthProvider extends ChangeNotifier {
+  User? _authUser;
+  bool _isLoading = true;
 
-  User get authUser => _authUser;
+  User? get authUser => _authUser;
+  bool get isAuthenticated => _authUser != null;
+  bool get isLoading => _isLoading;
+
+  // Inicializar verificando se há usuário logado
+  Future<void> init() async {
+    _isLoading = true;
+    notifyListeners();
+
+    _authUser = await tryGetAuthUser();
+
+    _isLoading = false;
+    notifyListeners();
+  }
 
   Future<User?> tryGetAuthUser() async {
     // Se o tcho já logou antes, o refresh token estará preenchido
@@ -17,6 +33,11 @@ class AuthProvider {
       return null;
     }
 
+    // final accessToken = await Storage.get(AppStrings.accessTokenStorageKey);
+    // if (accessToken != null) {
+    //   ApiService.setAccessToken(accessToken);
+    // }
+
     return await getAuthUser();
   }
 
@@ -24,6 +45,7 @@ class AuthProvider {
     var user = await getUser('me');
 
     _authUser = user;
+    notifyListeners();
     return user;
   }
 
@@ -41,8 +63,17 @@ class AuthProvider {
     );
 
     // Se o retorno http acima for diferente de 2XX, ele disparará um exception. Caso contrário, o retorno é um usuário logado
-    Storage.set(AppStrings.accessTokenStorageKey, response['access_token']);
-    Storage.set(AppStrings.refreshTokenStorageKey, response['refresh_token']);
+
+    final accessToken = response['access_token'];
+    final refreshToken = response['refresh_token'];
+
+    Storage.set(AppStrings.accessTokenStorageKey, accessToken);
+    Storage.set(AppStrings.refreshTokenStorageKey, refreshToken);
+
+    // ApiService.setAccessToken(accessToken);
+
+    // Buscar dados do usuário após login
+    await getAuthUser();
   }
 
   Future<void> refreshToken() async {
@@ -58,7 +89,9 @@ class AuthProvider {
       },
     );
 
-    Storage.set(AppStrings.accessTokenStorageKey, response['access_token']);
+    final accessToken = response['access_token'];
+    Storage.set(AppStrings.accessTokenStorageKey, accessToken);
+    // ApiService.setAccessToken(accessToken);
   }
 
   Future<User> getUser(String uuid) async {
@@ -66,4 +99,32 @@ class AuthProvider {
 
     return User.fromJson(response['data']);
   }
+
+  Future<void> logout() async {
+    print('🔴 Logout iniciado');
+    
+    try {
+      print('🔴 Limpando authUser');
+      _authUser = null;
+      notifyListeners();
+      
+      print('🔴 Limpando access token storage');
+      await Storage.remove(AppStrings.accessTokenStorageKey);
+      
+      print('🔴 Limpando refresh token storage');
+      await Storage.remove(AppStrings.refreshTokenStorageKey);
+      
+      print('🔴 Limpando ApiService token');
+      
+      print('✅ Logout concluído com sucesso');
+    } catch (e, stackTrace) {
+      print('❌ Erro durante logout: $e');
+      print('Stack trace: $stackTrace');
+      
+      // Garantir limpeza mesmo com erro
+      _authUser = null;
+      notifyListeners();
+    }
+  }
+
 }
