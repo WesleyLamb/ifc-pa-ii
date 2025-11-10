@@ -2,6 +2,7 @@ import 'package:app/ui/pages/dashboard_page.dart';
 import 'package:app/ui/pages/initial_load_page.dart';
 import 'package:app/ui/pages/login_page.dart';
 import 'package:app/ui/pages/register_page.dart';
+import 'package:app/ui/pages/home_page.dart';
 import 'package:flutter/widgets.dart';
 
 class AppRouter {
@@ -11,6 +12,6 @@ class AppRouter {
     InitialLoadPage.routeName: (_) => const InitialLoadPage(),
     LoginPage.routeName: (_) => const LoginPage(),
     RegisterPage.routeName: (_) => const RegisterPage(),
-    DashboardPage.routeName: (_) => const DashboardPage(),
+    HomePage.routeName: (_) => const HomePage(),
   };
 }
