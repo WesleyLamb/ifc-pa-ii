@@ -9,6 +9,7 @@ use App\DTO\UpdateKidDTO;
 use App\Models\Kid;
 use App\Repositories\Contracts\V1\KidRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class KidRepository implements KidRepositoryInterface
 {
@@ -31,7 +32,18 @@ class KidRepository implements KidRepositoryInterface
 
         $kid->save();
 
-        return $kid->refresh();
+        if ($dto->classId) {
+            $kidIdBigInt = DB::table('kids')
+                ->where('uuid', $kid->uuid)
+                ->value('id');
+
+            DB::table('class_kids')->insert([
+                'class_id' => $dto->classId,
+                'kid_id' => $kidIdBigInt
+            ]);
+        }
+
+        return $kid->refresh()->load('classes');
     }
 
     public function getKidByIdOrFail(string $kidId): Kid
@@ -66,12 +78,28 @@ class KidRepository implements KidRepositoryInterface
 
         $kid->save();
 
-        return $kid->refresh();
+        if ($dto->classIdWasChanged && $dto->classId !== null) {
+            $kidIdBigInt = DB::table('kids')
+                ->where('uuid', $kid->uuid)
+                ->value('id');
+
+            DB::table('class_kids')
+                ->where('kid_id', $kidIdBigInt)
+                ->delete();
+
+            DB::table('class_kids')->insert([
+                'class_id' => $dto->classId,
+                'kid_id' => $kidIdBigInt
+            ]);
+        }
+
+        return $kid->refresh()->load('classes');
     }
 
     public function deleteKid(string $kidId): void
     {
         $kid = $this->getKidByIdOrFail($kidId);
+        $kid->classes()->detach();
         $kid->delete();
     }
 

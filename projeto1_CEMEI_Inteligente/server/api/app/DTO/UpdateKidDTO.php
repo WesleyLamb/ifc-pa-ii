@@ -28,6 +28,9 @@ class UpdateKidDTO
     public string $turn;
     public bool $turnWasChanged = false;
 
+    public string $classId;
+    public bool $classIdWasChanged = false;
+
     public static function fromRequest(UpdateKidRequest $request): self
     {
         $dto = new self();
@@ -65,6 +68,11 @@ class UpdateKidDTO
         if ($request->has('turn')) {
             $dto->turnWasChanged = true;
             $dto->turn = $request->get('turn');
+        }
+
+        if ($request->has('class_id')) {
+            $dto->classIdWasChanged = true;
+            $dto->classId = $request->get('class_id');
         }
 
         return $dto;

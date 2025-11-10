@@ -14,6 +14,32 @@ class CEMEIClass extends Model
 
     public $table = 'classes';
     public $primaryKey = 'uuid';
+    public $keyType = 'string';
+    public $incrementing = false;
+
+    protected $fillable = ['name', 'uuid'];
+
+    public function kids()
+    {
+        return $this->belongsToMany(
+            Kid::class,
+            'class_kids',
+            'class_id',
+            'kid_id'
+        );
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'class_users',
+            'class_id',
+            'user_id',
+            'id',
+            'id'
+        );
+    }
 
     protected function scopeFilter(Builder $q, FilterDTO $filter)
     {

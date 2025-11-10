@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\DTO\FilterDTO;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +15,15 @@ class Kid extends Model
 
     public $table = 'kids';
     public $primaryKey = 'uuid';
+    public $keyType = 'string';
+    public $incrementing = false;
+
+    protected $fillable = ['name', 'library_identifier', 'birthday', 'turn', 'father_name', 'mother_name', 'cpf'];
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 
     protected function getTurnStringAttribute()
     {
@@ -37,7 +45,14 @@ class Kid extends Model
 
     public function classes()
     {
-        return $this->hasManyThrough(CEMEIClass::class, ClassKid::class, 'kid_id', 'id', 'id', 'class_id');
+        return $this->belongsToMany(
+            CEMEIClass::class,
+            'class_kids',
+            'kid_id',
+            'class_id',
+            'id',
+            'id'
+        );
     }
 
     protected function scopeFilter(Builder $q, FilterDTO $filter)

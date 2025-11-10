@@ -21,6 +21,7 @@ class KidSummaryResource extends JsonResource
             'birthday' => $this->birthday,
             'cpf' => $this->cpf,
             'turn' => ucfirst($this->turnString),
+            'classes' => $this->classes,
             'active' => $this->deleted_at ? false : true,
         ];
     }
