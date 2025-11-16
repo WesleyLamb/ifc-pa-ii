@@ -2,22 +2,9 @@ import 'dart:convert';
 import 'package:app/utils/api_request.dart' as ApiRequest;
 import '../models/class.dart';
 import '../models/kid.dart';
+import '../models/user.dart';
 
 class ApiService {
-  // static const String baseUrl = 'http://172.32.0.111:80';
-  
-  // static String? _accessToken;
-
-  // static void setAccessToken(String token) {
-  //   _accessToken = token;
-  // }
-
-  // static Map<String, String> get _headers => {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //       if (_accessToken != null) 'Authorization': 'Bearer $_accessToken',
-  //     };
-
   // Buscar todas as turmas
   static Future<List<Class>> getClasses() async {
 
@@ -50,5 +37,22 @@ class ApiService {
     } catch (e) {
       throw Exception('Erro ao parsear alunos: $e');
     }
+  }
+  static Future<User> register({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    final response = await ApiRequest.post(
+      'api/v1/auth/register',
+      data: {
+        'name': name,
+        'email': email,
+        'password': password,
+        'password_confirmation': passwordConfirmation,
+      },
+    );
+    return User.fromJson(response['data']);
   }
 }

@@ -51,10 +51,11 @@ class ProfilePage extends StatelessWidget {
         // Chamar logout
         await context.read<AuthProvider>().logout();
 
+        if (context.mounted && Navigator.canPop(context)) {
+          Navigator.pop(context); // Fecha loading, se existir
+        }
+        // Navega sempre para a tela inicial removendo toda pilha
         if (context.mounted) {
-          // Fechar loading
-          Navigator.pop(context);
-          
           Navigator.pushNamedAndRemoveUntil(
             context,
             InitialPage.routeName,
@@ -62,14 +63,8 @@ class ProfilePage extends StatelessWidget {
           );
         }
       } catch (e) {
-        if (context.mounted) {
+        if (context.mounted && Navigator.canPop(context)) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Erro ao sair: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
         }
       }
     }
