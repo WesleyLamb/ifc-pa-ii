@@ -55,4 +55,27 @@ class ApiService {
     );
     return User.fromJson(response['data']);
   }
+
+  static Future<List<Kid>> searchKids(String query) async {
+    try {
+      final response = await ApiRequest.get('api/v1/kids?q=$query');
+      final List kidsJson = response['data'];
+      final allResults = kidsJson.map((json) => Kid.fromJson(json)).toList();
+      
+      final queryLower = query.toLowerCase().trim();
+      final filtered = allResults.where((kid) {
+        final nameLower = kid.name.toLowerCase();
+        final cpfLower = kid.cpf.toLowerCase();
+        final libraryIdLower = kid.libraryIdentifier.toLowerCase();
+        
+        return nameLower.contains(queryLower) ||
+              cpfLower.contains(queryLower) ||
+              libraryIdLower.contains(queryLower);
+      }).toList();
+      
+      return filtered;
+    } catch (e) {
+      throw Exception('Erro ao buscar crianças: $e');
+    }
+  }
 }
