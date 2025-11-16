@@ -1,14 +1,18 @@
 import 'package:app/constants/strings.dart';
 import 'package:app/providers/auth_provider.dart';
+import 'package:app/services/api_service.dart';
 import 'package:app/ui/pages/initial_load_page.dart';
 import 'package:app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-List<SingleChildWidget> _providers = [Provider(create: (_) => AuthProvider())];
+List<SingleChildWidget> _providers = [
+  ChangeNotifierProvider(create: (_) => AuthProvider()..init()),
+];
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: _providers, child: const MainApp()));
 }
 
