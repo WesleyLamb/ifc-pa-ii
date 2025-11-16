@@ -13,6 +13,9 @@ dependencies:
   flutter_secure_storage:
   provider:
   salomon_bottom_bar:
+  barcode_scan2:
+  mobile_scanner:
+  qr_flutter:
 
 dev_dependencies:
   flutter_test:
