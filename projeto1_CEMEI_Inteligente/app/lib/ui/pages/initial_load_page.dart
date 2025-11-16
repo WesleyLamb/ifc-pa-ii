@@ -1,4 +1,5 @@
 import 'package:app/ui/pages/dashboard_page.dart';
+import 'package:app/ui/pages/home_page.dart';
 import 'package:app/ui/pages/initial_page.dart';
 import 'package:app/providers/auth_provider.dart';
 import 'package:app/ui/widgets/spinner.dart';
@@ -28,7 +29,7 @@ class _InitialLoadPageState extends State<InitialLoadPage> {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (_, __, ___) =>
-              user == null ? const InitialPage() : const DashboardPage(),
+              user == null ? const InitialPage() : const HomePage(),
           transitionDuration: Duration.zero,
         ),
       );

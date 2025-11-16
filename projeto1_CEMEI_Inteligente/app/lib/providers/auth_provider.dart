@@ -33,11 +33,6 @@ class AuthProvider extends ChangeNotifier {
       return null;
     }
 
-    // final accessToken = await Storage.get(AppStrings.accessTokenStorageKey);
-    // if (accessToken != null) {
-    //   ApiService.setAccessToken(accessToken);
-    // }
-
     return await getAuthUser();
   }
 
@@ -101,30 +96,25 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    print('🔴 Logout iniciado');
-    
     try {
-      print('🔴 Limpando authUser');
       _authUser = null;
       notifyListeners();
-      
-      print('🔴 Limpando access token storage');
+
       await Storage.remove(AppStrings.accessTokenStorageKey);
-      
-      print('🔴 Limpando refresh token storage');
       await Storage.remove(AppStrings.refreshTokenStorageKey);
       
-      print('🔴 Limpando ApiService token');
-      
-      print('✅ Logout concluído com sucesso');
     } catch (e, stackTrace) {
-      print('❌ Erro durante logout: $e');
-      print('Stack trace: $stackTrace');
-      
-      // Garantir limpeza mesmo com erro
       _authUser = null;
       notifyListeners();
     }
   }
 
+  Future<User> register(String name, String email, String password, String passwordConfirmation) async {
+    return await ApiService.register(
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    );
+  }
 }
