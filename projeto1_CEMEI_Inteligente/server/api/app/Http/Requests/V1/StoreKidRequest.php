@@ -35,7 +35,7 @@ class StoreKidRequest extends FormRequest
             'mother_name' => ['present', 'nullable'],
             'cpf' => ['required', Rule::unique('kids', 'cpf')],
             'turn' => ['required', Rule::in('Matutino', 'Vespertino', 'Integral')],
-            'class_id' => ['required', 'exists:classes,id'],
+            'class.id' => ['required', 'exists:classes,uuid'],
         ];
     }
 }

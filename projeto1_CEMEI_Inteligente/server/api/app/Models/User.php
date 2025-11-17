@@ -56,6 +56,16 @@ class User extends Authenticatable
         return $this->hasManyThrough(CEMEIClass::class, ClassUser::class, 'user_id', 'id', 'id', 'class_id');
     }
 
+    public function userFunctions()
+    {
+        return $this->hasMany(UserFunction::class, 'user_id', 'id');
+    }
+
+    public function functions()
+    {
+        return $this->hasManyThrough(CEMEIFunction::class, UserFunction::class, 'user_id', 'id', 'id', 'function_id');
+    }
+
     public function can($abilities, $arguments = [])
     {
         $grantedPermissions = [];

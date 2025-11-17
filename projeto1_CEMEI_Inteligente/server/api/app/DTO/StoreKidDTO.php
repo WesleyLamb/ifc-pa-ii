@@ -3,8 +3,12 @@
 namespace App\DTO;
 
 use App\Http\Requests\V1\StoreKidRequest;
+use App\Models\CEMEIClass;
+use App\Repositories\Contracts\V1\ClassRepositoryInterface;
+use App\Repositories\V1\ClassRepository;
 use App\Types\KidTurn;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\App;
 
 class StoreKidDTO
 {
@@ -15,10 +19,13 @@ class StoreKidDTO
     public string $motherName;
     public string $cpf;
     public string $turn;
-    public string $classId;
+    public CEMEIClass $class;
 
     public static function fromRequest(StoreKidRequest $request): self
     {
+        /** @var ClassRepository $classRepository */
+        $classRepository = App::make(ClassRepositoryInterface::class);
+
         $dto = new self();
 
         $dto->libraryIdentifier = $request->get('library_identifier');
@@ -28,7 +35,7 @@ class StoreKidDTO
         $dto->motherName = $request->get('mother_name');
         $dto->cpf = preg_replace('/\D+/', '', $request->get('cpf'));
         $dto->turn = $request->get('turn');
-        $dto->classId = $request->get('class_id');
+        $dto->class = $classRepository->getClassByIdOrFail($request->get('class.id'));
 
         return $dto;
     }

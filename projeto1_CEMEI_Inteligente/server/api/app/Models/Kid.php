@@ -18,13 +18,6 @@ class Kid extends Model
     public $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['name', 'library_identifier', 'birthday', 'turn', 'father_name', 'mother_name', 'cpf'];
-
-    public function uniqueIds(): array
-    {
-        return ['uuid'];
-    }
-
     protected function getTurnStringAttribute()
     {
         return match($this->turn) {
@@ -43,20 +36,20 @@ class Kid extends Model
         };
     }
 
-    public function classes()
+    public function class()
     {
-        return $this->belongsToMany(
-            CEMEIClass::class,
-            'class_kids',
-            'kid_id',
-            'class_id',
-            'id',
-            'id'
-        );
+        return $this->belongsTo(CEMEIClass::class, 'class_id', 'id');
     }
 
     protected function scopeFilter(Builder $q, FilterDTO $filter)
     {
-        return $q;
+        $filterInt = preg_replace('/[^0-9]+/', '', $filter->q);
+
+        return $q = $q->where(function($q) use ($filter, $filterInt) {
+            return $q->where('name', 'ilike', "%$filter->q%")
+                    ->orWhere('cpf', 'like', "%$filterInt%")
+                    ->orWhere('father_name', 'ilike', "%$filter->q%")
+                    ->orWhere('mother_name', 'ilike', "%$filter->q%");
+        });
     }
 }

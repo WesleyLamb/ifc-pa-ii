@@ -6,6 +6,7 @@ use App\DTO\FilterDTO;
 use App\DTO\PaginatorDTO;
 use App\DTO\StoreKidDTO;
 use App\DTO\UpdateKidDTO;
+use App\Models\ClassKid;
 use App\Models\Kid;
 use App\Repositories\Contracts\V1\KidRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -29,31 +30,26 @@ class KidRepository implements KidRepositoryInterface
         $kid->mother_name = $dto->motherName;
         $kid->cpf = $dto->cpf;
         $kid->turnString = $dto->turn;
+        $kid->class_id = $dto->class->id;
 
         $kid->save();
 
-        if ($dto->classId) {
-            $kidIdBigInt = DB::table('kids')
-                ->where('uuid', $kid->uuid)
-                ->value('id');
-
-            DB::table('class_kids')->insert([
-                'class_id' => $dto->classId,
-                'kid_id' => $kidIdBigInt
-            ]);
-        }
-
-        return $kid->refresh()->load('classes');
+        return $kid->refresh();
     }
 
-    public function getKidByIdOrFail(string $kidId): Kid
+    public function getByIdOrFail(string $kidId): Kid
     {
         return Kid::where('uuid', $kidId)->firstOrFail();
     }
 
+    public function getBylibraryIdentifierOrFail(string $libraryIdentifier): Kid
+    {
+        return Kid::where('library_identifier', $libraryIdentifier)->firstOrFail();
+    }
+
     public function updateKid(string $kidId, UpdateKidDTO $dto): Kid
     {
-        $kid = $this->getKidByIdOrFail($kidId);
+        $kid = $this->getByIdOrFail($kidId);
 
         if ($dto->libraryIdentifierWasChanged)
             $kid->library_identifier = $dto->libraryIdentifier;
@@ -98,7 +94,7 @@ class KidRepository implements KidRepositoryInterface
 
     public function deleteKid(string $kidId): void
     {
-        $kid = $this->getKidByIdOrFail($kidId);
+        $kid = $this->getByIdOrFail($kidId);
         $kid->classes()->detach();
         $kid->delete();
     }
