@@ -62,13 +62,12 @@ class _EditKidPageState extends State<EditKidPage> {
         libraryIdentifierController.text = kid.libraryIdentifier ?? '';
         nameController.text = kid.name ?? '';
         birthdayController.text = kid.birthday.toIso8601String().split('T')[0];
-        fatherNameController.text = kid.father_name ?? '';
-        motherNameController.text = kid.mother_name ?? '';
+        fatherNameController.text = kid.fatherName ?? '';
+        motherNameController.text = kid.motherName ?? '';
         cpfController.text = kid.cpf ?? '';
         _selectedTurn = kid.turn ?? 'Matutino';
 
-        // Seleciona a turma atual, que é o id da primeira turma na lista de turmas da criança 
-        _selectedClassId = kid.classes.isNotEmpty ? kid.classes[0].id : null;
+        _selectedClassId = kid.cemeiClass?.id;
 
         // Preenche lista de turmas
         setState(() {
@@ -116,20 +115,14 @@ class _EditKidPageState extends State<EditKidPage> {
   /// Mostra erro em snackbar
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
   /// Mostra sucesso em snackbar
   void _showSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
 
@@ -204,9 +197,7 @@ class _EditKidPageState extends State<EditKidPage> {
       ),
       body: SafeArea(
         child: _isLoading && _classes.isEmpty
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
+            ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -217,7 +208,7 @@ class _EditKidPageState extends State<EditKidPage> {
                     const SizedBox(height: 16),
                     _buildTextField(
                       controller: libraryIdentifierController,
-                      label: 'Library Identifier',
+                      label: 'Matrícula',
                       icon: Icons.badge,
                     ),
                     const SizedBox(height: 12),
@@ -289,10 +280,8 @@ class _EditKidPageState extends State<EditKidPage> {
                                 ? null
                                 : () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14),
-                              side: const BorderSide(
-                                  color: Color(0xFF15237E)),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: const BorderSide(color: Color(0xFF15237E)),
                             ),
                             child: const Text(
                               'Cancelar',
@@ -306,8 +295,7 @@ class _EditKidPageState extends State<EditKidPage> {
                             onPressed: _isLoading ? null : _saveChanges,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF15237E),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             child: _isLoading
                                 ? const SizedBox(
@@ -361,19 +349,14 @@ class _EditKidPageState extends State<EditKidPage> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF15237E),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF15237E), width: 2),
         ),
       ),
     );
@@ -395,19 +378,14 @@ class _EditKidPageState extends State<EditKidPage> {
           icon: const Icon(Icons.calendar_today),
           onPressed: () => _selectDate(controller),
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF15237E),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF15237E), width: 2),
         ),
       ),
       onTap: () => _selectDate(controller),
@@ -426,26 +404,18 @@ class _EditKidPageState extends State<EditKidPage> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: const Icon(Icons.wb_sunny_outlined),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF15237E),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF15237E), width: 2),
         ),
       ),
       items: items
-          .map((item) => DropdownMenuItem(
-                value: item,
-                child: Text(item),
-              ))
+          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
           .toList(),
       onChanged: onChanged,
     );
@@ -463,31 +433,22 @@ class _EditKidPageState extends State<EditKidPage> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: const Icon(Icons.school),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF15237E),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF15237E), width: 2),
         ),
       ),
       items: [
-        const DropdownMenuItem(
-          value: null,
-          child: Text('Sem turma'),
-        ),
+        const DropdownMenuItem(value: null, child: Text('Sem turma')),
         ...classes
-            .map((cls) => DropdownMenuItem(
-                  value: cls.id,
-                  child: Text(cls.name),
-                ))
+            .map(
+              (cls) => DropdownMenuItem(value: cls.id, child: Text(cls.name)),
+            )
             .toList(),
       ],
       onChanged: onChanged,

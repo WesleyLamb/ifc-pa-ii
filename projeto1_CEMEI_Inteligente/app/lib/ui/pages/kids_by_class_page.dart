@@ -1,3 +1,4 @@
+import 'package:app/models/kid_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/components/colors/app_colors.dart';
 import 'package:app/models/class.dart';
@@ -15,8 +16,8 @@ class KidsByClassPage extends StatefulWidget {
 }
 
 class _KidsByClassPageState extends State<KidsByClassPage> {
-  List<Kid> _kids = [];
-  List<Kid> _filteredKids = [];
+  List<KidSummary> _kids = [];
+  List<KidSummary> _filteredKids = [];
   bool _isLoading = true;
   String _searchQuery = '';
 
@@ -62,9 +63,11 @@ class _KidsByClassPageState extends State<KidsByClassPage> {
         _filteredKids = _kids;
       } else {
         _filteredKids = _kids
-            .where((kid) =>
-                kid.name.toLowerCase().contains(query.toLowerCase()) ||
-                kid.libraryIdentifier.contains(query))
+            .where(
+              (kid) =>
+                  kid.name.toLowerCase().contains(query.toLowerCase()) ||
+                  kid.libraryIdentifier.contains(query),
+            )
             .toList();
       }
     });
@@ -127,61 +130,59 @@ class _KidsByClassPageState extends State<KidsByClassPage> {
           Expanded(
             child: _isLoading
                 ? const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primary,
-                    ),
+                    child: CircularProgressIndicator(color: AppColors.primary),
                   )
                 : _filteredKids.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.child_care_outlined,
-                              size: 64,
-                              color: AppColors.light,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isEmpty
-                                  ? 'Nenhum aluno nesta turma'
-                                  : 'Nenhum aluno encontrado',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.dark.withOpacity(0.6),
-                              ),
-                            ),
-                            if (_searchQuery.isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    _searchQuery = '';
-                                    _filteredKids = _kids;
-                                  });
-                                },
-                                icon: const Icon(Icons.clear),
-                                label: const Text('Limpar busca'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: AppColors.primary,
-                                ),
-                              ),
-                            ],
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.child_care_outlined,
+                          size: 64,
+                          color: AppColors.light,
                         ),
-                      )
-                    : RefreshIndicator(
-                        color: AppColors.primary,
-                        onRefresh: _loadKids,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filteredKids.length,
-                          itemBuilder: (context, index) {
-                            final kid = _filteredKids[index];
-                            return KidCard(kid: kid);
-                          },
+                        const SizedBox(height: 16),
+                        Text(
+                          _searchQuery.isEmpty
+                              ? 'Nenhum aluno nesta turma'
+                              : 'Nenhum aluno encontrado',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.dark.withOpacity(0.6),
+                          ),
                         ),
-                      ),
+                        if (_searchQuery.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _filteredKids = _kids;
+                              });
+                            },
+                            icon: const Icon(Icons.clear),
+                            label: const Text('Limpar busca'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: _loadKids,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filteredKids.length,
+                      itemBuilder: (context, index) {
+                        final kid = _filteredKids[index];
+                        return KidCard(kid: kid);
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

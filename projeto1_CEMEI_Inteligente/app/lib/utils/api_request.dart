@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer' as developer;
 
 import 'package:app/constants/strings.dart';
 import 'package:app/exceptions/exceptions.dart';
@@ -24,7 +25,7 @@ Future<dynamic> request(
 
     if (apiToken != null) HttpHeaders.authorizationHeader: 'Bearer $apiToken',
   };
-
+  developer.log('Método: $method path = $path body = $data');
   switch (method) {
     case HttpMethod.get:
       response = await Http.get(uri, headers: headers);

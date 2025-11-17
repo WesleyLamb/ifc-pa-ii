@@ -1,18 +1,13 @@
+import 'package:app/models/kid_base.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/components/colors/app_colors.dart';
-import 'package:app/models/kid.dart';
 import 'package:app/ui/pages/edit_kid_page.dart';
 
-
 class KidCard extends StatelessWidget {
-  final Kid kid;
+  final KidBase kid;
   final VoidCallback? onTap;
 
-  const KidCard({
-    Key? key,
-    required this.kid,
-    this.onTap,
-  }) : super(key: key);
+  const KidCard({Key? key, required this.kid, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +19,16 @@ class KidCard extends StatelessWidget {
         side: BorderSide(color: AppColors.light.withOpacity(0.5)),
       ),
       child: InkWell(
-        onTap: onTap ?? () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditKidPage(kidId: kid.id),
-            ),
-          );
-        },
+        onTap:
+            onTap ??
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditKidPage(kidId: kid.id),
+                ),
+              );
+            },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -103,8 +100,8 @@ class KidCard extends StatelessWidget {
                           kid.idade > 1
                               ? '${kid.idade} anos'
                               : kid.idade == 1
-                                  ? '${kid.idade} ano'
-                                  : '${kid.idadeEmMeses} meses',
+                              ? '${kid.idade} ano'
+                              : '${kid.idadeEmMeses} meses',
                           style: TextStyle(
                             fontSize: 13,
                             color: AppColors.dark.withOpacity(0.6),
@@ -129,73 +126,48 @@ class KidCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     // Turmas
-                    if (kid.classes.isNotEmpty)
+                    if (kid.cemeiClass != null)
                       Wrap(
                         spacing: 6,
                         runSpacing: 6,
-                        children: kid.classes.map<Widget>((cls) {
-                          if (cls is Map<String, dynamic>) {
-                            final className = cls['name'] ?? 'Sem nome';
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.class_outlined,
-                                    size: 12,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.class_outlined,
+                                  size: 12,
+                                  color: AppColors.white,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  kid.cemeiClass!.name,
+                                  style: const TextStyle(
+                                    fontSize: 12,
                                     color: AppColors.white,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    className,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }).toList(),
-                      )
-                    else
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.light.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          'Sem turma',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.dark,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                   ],
                 ),
               ),
 
               // Ícone de seta
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.light,
-              ),
+              const Icon(Icons.chevron_right, color: AppColors.light),
             ],
           ),
         ),

@@ -64,10 +64,16 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
       setState(() {
         searchResults = results;
       });
-      developer.log('Busca encontrou ${results.length} crianças: $query',
-          name: 'BarcodeScan');
+      developer.log(
+        'Busca encontrou ${results.length} crianças: $query',
+        name: 'BarcodeScan',
+      );
     } catch (e) {
-      developer.log('Erro ao buscar crianças: $e', name: 'BarcodeScan', level: 1000);
+      developer.log(
+        'Erro ao buscar crianças: $e',
+        name: 'BarcodeScan',
+        level: 1000,
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -104,7 +110,7 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
         'libraryId': kid.libraryIdentifier,
         'kidName': kid.name,
         'timestamp': timestamp,
-        'className': kid.classes.isNotEmpty ? kid.classes[0] : 'Turma A',
+        'className': kid.cemeiClass,
         'status': 'Chegada',
       };
 
@@ -140,10 +146,7 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Erro: $e'), backgroundColor: Colors.red),
         );
         setState(() {
           _isProcessing = false;
@@ -194,10 +197,7 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(), 
-              ),
+              Padding(padding: const EdgeInsets.all(16.0), child: Container()),
               const SizedBox(height: 24),
 
               // Câmera
@@ -209,16 +209,14 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                     children: [
                       Text(
                         'Leitor de Código de Barras',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF15237E),
                             ),
                       ),
                       const SizedBox(height: 12),
-                      SizedBox(
-                        height: 200,
-                        child: _buildCameraView(),
-                      ),
+                      SizedBox(height: 200, child: _buildCameraView()),
                     ],
                   ),
                 ),
@@ -234,9 +232,9 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                     Text(
                       'Buscar Criança',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF15237E),
-                          ),
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF15237E),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _buildSearchField(),
@@ -256,15 +254,12 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                     Text(
                       'Histórico de Leituras',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF15237E),
-                          ),
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF15237E),
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: 100,
-                      child: _buildScanHistoryList(),
-                    ),
+                    SizedBox(height: 100, child: _buildScanHistoryList()),
                   ],
                 ),
               ),
@@ -292,8 +287,10 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
               final List<Barcode> barcodes = capture.barcodes;
               for (final barcode in barcodes) {
                 if (barcode.rawValue != null && !_isProcessing) {
-                  developer.log('Barcode detectado: ${barcode.rawValue}',
-                      name: 'BarcodeScan');
+                  developer.log(
+                    'Barcode detectado: ${barcode.rawValue}',
+                    name: 'BarcodeScan',
+                  );
                   _processLibraryIdentifier(barcode.rawValue!);
                 }
               }
@@ -303,8 +300,11 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.camera_alt_outlined,
-                        size: 48, color: Colors.grey),
+                    const Icon(
+                      Icons.camera_alt_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
                     const SizedBox(height: 12),
                     Text(
                       'Erro ao acessar câmera',
@@ -313,21 +313,14 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                     const SizedBox(height: 4),
                     Text(
                       'Verifique as permissões',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   ],
                 ),
               );
             },
           ),
-          Positioned.fill(
-            child: CustomPaint(
-              painter: BarcodeOverlayPainter(),
-            ),
-          ),
+          Positioned.fill(child: CustomPaint(painter: BarcodeOverlayPainter())),
         ],
       ),
     );
@@ -350,25 +343,24 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.grey[600]!),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.grey[600]!,
+                    ),
                   ),
                 ),
               )
             : searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      searchController.clear();
-                      setState(() {
-                        searchResults = [];
-                      });
-                    },
-                  )
-                : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  searchController.clear();
+                  setState(() {
+                    searchResults = [];
+                  });
+                },
+              )
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onChanged: (value) {
         setState(() {});
@@ -389,15 +381,14 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
       return const SizedBox.shrink();
     }
 
-    if (searchController.text.isNotEmpty && searchResults.isEmpty && !_isSearching) {
+    if (searchController.text.isNotEmpty &&
+        searchResults.isEmpty &&
+        !_isSearching) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           'Nenhuma criança encontrada',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 13,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 13),
         ),
       );
     }
@@ -416,13 +407,13 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
         itemBuilder: (context, index) {
           final kid = searchResults[index];
           return ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
             leading: CircleAvatar(
               backgroundColor: const Color(0xFF15237E).withOpacity(0.2),
-              child: Icon(
-                Icons.person,
-                color: const Color(0xFF15237E),
-              ),
+              child: Icon(Icons.person, color: const Color(0xFF15237E)),
             ),
             title: Text(
               kid.name,
@@ -445,10 +436,7 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
       return Center(
         child: Text(
           'Nenhuma leitura realizada',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 13,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 13),
         ),
       );
     }
@@ -530,18 +518,38 @@ class BarcodeOverlayPainter extends CustomPainter {
     canvas.drawLine(Offset(left, top + cornerLength), Offset(left, top), paint);
     canvas.drawLine(Offset(left, top), Offset(left + cornerLength, top), paint);
 
-    canvas.drawLine(Offset(right - cornerLength, top), Offset(right, top), paint);
-    canvas.drawLine(Offset(right, top), Offset(right, top + cornerLength), paint);
+    canvas.drawLine(
+      Offset(right - cornerLength, top),
+      Offset(right, top),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(right, top),
+      Offset(right, top + cornerLength),
+      paint,
+    );
 
     canvas.drawLine(
-        Offset(left, bottom - cornerLength), Offset(left, bottom), paint);
+      Offset(left, bottom - cornerLength),
+      Offset(left, bottom),
+      paint,
+    );
     canvas.drawLine(
-        Offset(left, bottom), Offset(left + cornerLength, bottom), paint);
+      Offset(left, bottom),
+      Offset(left + cornerLength, bottom),
+      paint,
+    );
 
     canvas.drawLine(
-        Offset(right - cornerLength, bottom), Offset(right, bottom), paint);
+      Offset(right - cornerLength, bottom),
+      Offset(right, bottom),
+      paint,
+    );
     canvas.drawLine(
-        Offset(right, bottom - cornerLength), Offset(right, bottom), paint);
+      Offset(right, bottom - cornerLength),
+      Offset(right, bottom),
+      paint,
+    );
 
     final scanY = top + (bottom - top) / 2;
     canvas.drawLine(

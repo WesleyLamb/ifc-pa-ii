@@ -1,6 +1,5 @@
 import 'package:app/constants/strings.dart';
 import 'package:app/providers/auth_provider.dart';
-import 'package:app/services/api_service.dart';
 import 'package:app/ui/pages/initial_load_page.dart';
 import 'package:app/router.dart';
 import 'package:flutter/material.dart';
