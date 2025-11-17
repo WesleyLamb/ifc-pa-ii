@@ -8,10 +8,30 @@ import 'package:flutter/material.dart';
 class AuthProvider extends ChangeNotifier {
   User? _authUser;
   bool _isLoading = true;
+  List<String> _permissions = [];
 
   User? get authUser => _authUser;
   bool get isAuthenticated => _authUser != null;
   bool get isLoading => _isLoading;
+  List<String> get permissions => _permissions;
+
+  // Verifica se o usuário tem permissão específica
+  bool hasPermission(String permission) {
+    if (_permissions.contains('*')) return true; // Super admin
+    if (_permissions.contains('$permission')) return true; // Permissão exata
+
+    // Verifica wildcards (kids.* para kids.edit, classes.* para classes.index, etc)
+    final parts = permission.split('.');
+    if (parts.length >= 2) {
+      final module = parts[0];
+      if (_permissions.contains('$module.*')) return true;
+    }
+
+    // Verifica *.*
+    if (_permissions.contains('*.*')) return true;
+
+    return false;
+  }
 
   // Inicializar verificando se há usuário logado
   Future<void> init() async {

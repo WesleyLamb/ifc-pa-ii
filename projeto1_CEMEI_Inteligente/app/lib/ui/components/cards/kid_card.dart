@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/ui/components/colors/app_colors.dart';
 import 'package:app/models/kid.dart';
+import 'package:app/ui/pages/edit_kid_page.dart';
+
 
 class KidCard extends StatelessWidget {
   final Kid kid;
@@ -22,7 +24,14 @@ class KidCard extends StatelessWidget {
         side: BorderSide(color: AppColors.light.withOpacity(0.5)),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap ?? () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditKidPage(kidId: kid.id),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
