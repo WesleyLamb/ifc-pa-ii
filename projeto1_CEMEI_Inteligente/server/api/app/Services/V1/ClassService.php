@@ -81,13 +81,13 @@ class ClassService implements ClassServiceInterface
 
     public function addKid(AddKidToClassRequest $request): KidResource
     {
-        $kid = $this->kidRepository->getKidByIdOrFail($request->get('kid_id'));
+        $kid = $this->kidRepository->getByIdOrFail($request->get('kid_id'));
         return new KidResource($this->classRepository->addKid($request->route('class_id'), new AddKidToClassDTO($kid)));
     }
 
     public function deleteKid(Request $request): JsonResponse
     {
-        $kid = $this->kidRepository->getKidByIdOrFail($request->route('kid_id'));
+        $kid = $this->kidRepository->getByIdOrFail($request->route('kid_id'));
         $this->classRepository->deleteKid($request->route('class_id'), new DeleteKidFromClassDTO($kid));
         return response()->json([], 204);
     }

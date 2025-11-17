@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\V1\FunctionController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\ClassController;
@@ -35,7 +37,10 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
     Route::group(['middleware' => 'auth:api'], function() {
         Route::group(['prefix' => 'users', 'name' => '.users'], function () {
             Route::get('', [UserController::class, 'index'])->name('.index')->middleware('can:users.index');
-            Route::get('{user_id}', [UserController::class, 'show'])->name('.show');
+            Route::group(['prefix' => '{user_id}'], function() {
+                Route::get('', [UserController::class, 'show'])->name('.show');
+                Route::put('', [UserController::class, 'update']);
+            });
         });
 
         Route::group(['prefix' => 'kids', 'name' => '.kids'], function() {
@@ -85,6 +90,19 @@ Route::group(['prefix' => 'v1', 'name' => 'api.v1'], function() {
                     });
                 });
             });
+        });
+
+        Route::group(['prefix' => 'requests'], function() {
+            Route::get('', [RequestController::class, 'index']);
+            Route::post('', [RequestController::class, 'store']);
+            Route::group(['prefix' => '{request_id}'], function() {
+                Route::put('attend', [RequestController::class, 'attend']);
+            });
+        });
+
+        Route::group(['prefix' => 'notifications', 'name' => '.poll'], function() {
+            Route::get('poll', [NotificationController::class, 'poll']);
+            Route::post('ack', [NotificationController::class, 'ack']);
         });
     });
 });

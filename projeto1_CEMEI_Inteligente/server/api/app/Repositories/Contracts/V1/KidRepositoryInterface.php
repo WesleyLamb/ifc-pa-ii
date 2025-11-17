@@ -13,7 +13,8 @@ interface KidRepositoryInterface
 {
     public function getAll(FilterDTO $filter, PaginatorDTO $paginator): LengthAwarePaginator;
     public function createKid(StoreKidDTO $dto): Kid;
-    public function getKidByIdOrFail(string $kidId): Kid;
+    public function getByIdOrFail(string $kidId): Kid;
+    public function getBylibraryIdentifierOrFail(string $libraryIdentifier): Kid;
     public function updateKid(string $kidId, UpdateKidDTO $dto): Kid;
     public function deleteKid(string $kidId): void;
 

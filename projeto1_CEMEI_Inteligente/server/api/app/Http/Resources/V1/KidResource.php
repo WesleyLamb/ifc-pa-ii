@@ -26,6 +26,7 @@ class KidResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'active' => $this->deleted_at ? false : true,
+            'class' => new ClassSummaryResource($this->class),
         ];
     }
 }

@@ -39,7 +39,7 @@ class KidService implements KidServiceInterface
 
     public function show(Request $request): KidResource
     {
-        return new KidResource($this->kidRepository->getKidByIdOrFail($request->route('kid_id')));
+        return new KidResource($this->kidRepository->getByIdOrFail($request->route('kid_id')));
     }
 
     public function update(UpdateKidRequest $request): KidResource

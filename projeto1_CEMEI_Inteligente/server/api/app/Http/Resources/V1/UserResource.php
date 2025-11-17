@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'permissions' => $this->permissions->pluck('permission'),
+            'functions' => FunctionSummaryResource::collection($this->functions),
         ];
     }
 }

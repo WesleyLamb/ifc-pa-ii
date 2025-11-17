@@ -2,25 +2,23 @@
 
 namespace App\Notifications;
 
-use App\Models\Kid;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class KidDispatch extends Notification
+class EscortKid extends Notification
 {
     use Queueable;
 
-    protected Kid $kid;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Kid $kid)
+    public function __construct()
     {
-        $this->kid = $kid;
+        //
     }
 
     /**
@@ -31,7 +29,7 @@ class KidDispatch extends Notification
      */
     public function via($notifiable)
     {
-        return ['push', 'websocket'];
+        return ['mail'];
     }
 
     /**

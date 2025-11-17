@@ -5,7 +5,9 @@ namespace App\Repositories\V1;
 use App\DTO\FilterDTO;
 use App\DTO\PaginatorDTO;
 use App\DTO\StoreUserDTO;
+use App\DTO\UpdateUserDTO;
 use App\Models\User;
+use App\Models\UserFunction;
 use App\Repositories\Contracts\V1\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -40,5 +42,27 @@ class UserRepository implements UserRepositoryInterface
         return User::filter($filter)->whereHas('classes', function($q) use ($classId) {
             $q->where('uuid', $classId);
         })->paginate($paginator->perPage);
+    }
+
+    public function update(string $userId, UpdateUserDTO $dto): User
+    {
+        $user = $this->getByIdOrFail($userId);
+
+        if ($dto->functionsWasChanged) {
+            $user->userFunctions()->whereNotIn('function_id', $dto->functions->pluck('id')->toArray())->delete();
+
+            foreach ($dto->functions as $function) {
+                if (!$user->userFunctions()->where('function_id', $function['id'])->exists()) {
+                    $userFunction = new UserFunction();
+
+                    $userFunction->user_id = $user->id;
+                    $userFunction->function_id = $function['id'];
+
+                    $userFunction->save();
+                }
+            }
+        }
+
+        return $user->refresh();
     }
 }

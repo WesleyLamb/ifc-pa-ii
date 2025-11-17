@@ -28,7 +28,7 @@ services:
       - "5435:5432"
     restart: unless-stopped
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - ./db/data:/var/lib/postgresql/data
     networks:
       cemei_inteligente:
         ipv4_address: "172.16.3.3"

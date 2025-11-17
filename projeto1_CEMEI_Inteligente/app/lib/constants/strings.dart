@@ -3,7 +3,7 @@ class AppStrings {
 
   static const String appName = 'CEMEI Inteligente';
   // static const String host = 'http://192.168.3.11';
-  static const String host = 'http://172.32.0.111';
+  static const String host = String.fromEnvironment('API_URL');
 
   static const String accessTokenStorageKey = 'auth_accessToken';
   static const String refreshTokenStorageKey = "auth_refreshToken";

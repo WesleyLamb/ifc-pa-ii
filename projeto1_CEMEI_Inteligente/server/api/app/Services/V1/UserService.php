@@ -4,6 +4,8 @@ namespace App\Services\V1;
 
 use App\DTO\FilterDTO;
 use App\DTO\PaginatorDTO;
+use App\DTO\UpdateUserDTO;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Http\Resources\V1\UserSummaryResource;
 use App\Repositories\Contracts\V1\UserRepositoryInterface;
@@ -17,6 +19,11 @@ class UserService implements UserServiceInterface
 {
     public UserRepository $userRepository;
 
+    protected function convertUserId(string $RouteUserId): string
+    {
+        return $RouteUserId != 'me' ? $RouteUserId : Auth::user()->uuid;
+    }
+
     public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -29,10 +36,11 @@ class UserService implements UserServiceInterface
 
     public function show(Request $request): UserResource
     {
-        $userId = $request->route('user_id');
-        if ($userId == 'me') {
-            $userId = Auth::user()->uuid;
-        }
-        return new UserResource($this->userRepository->getByIdOrFail($userId));
+        return new UserResource($this->userRepository->getByIdOrFail($this->convertUserId($request->route('user_id'))));
+    }
+
+    public function update(UpdateUserRequest $request): UserResource
+    {
+        return new UserResource($this->userRepository->update($this->convertUserId($request->route('user_id')), UpdateUserDTO::fromRequest($request)));
     }
 }

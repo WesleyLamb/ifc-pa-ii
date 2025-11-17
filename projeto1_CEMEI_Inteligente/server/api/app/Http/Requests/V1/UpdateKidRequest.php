@@ -26,7 +26,7 @@ class UpdateKidRequest extends FormRequest
      */
     public function rules()
     {
-        $kid = App::make(KidRepositoryInterface::class)->getKidByIdOrFail(request()->route('kid_id'));
+        $kid = App::make(KidRepositoryInterface::class)->getByIdOrFail(request()->route('kid_id'));
         return [
             'library_identifier' => ['sometimes', 'string', Rule::unique('kids', 'library_identifier')->ignore($kid->uuid, 'uuid')],
             'name' => ['sometimes', 'string'],
