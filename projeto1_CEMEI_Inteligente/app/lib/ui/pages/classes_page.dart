@@ -27,7 +27,7 @@ class _ClassesPageState extends State<ClassesPage> {
     setState(() => _isLoading = true);
     
     try {
-      final classes = await ApiService.getClasses();
+      final classes = await ApiService.getAllClasses();
       setState(() {
         _classes = classes;
         _filteredClasses = classes;

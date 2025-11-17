@@ -84,8 +84,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               onTap: widget.onTabChange,
               items: [
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.home),
-                  title: const Text('Início'),
+                  icon: const Icon(Icons.search),
+                  title: const Text('Buscar'),
                   selectedColor: const Color(0xFF0016A8),
                 ),
                 SalomonBottomBarItem(
