@@ -1,7 +1,10 @@
 import 'package:app/models/class.dart';
+import 'package:app/models/class_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:app/models/kid.dart';
 import 'package:app/services/api_service.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class EditKidPage extends StatefulWidget {
   final String kidId;
@@ -24,8 +27,8 @@ class _EditKidPageState extends State<EditKidPage> {
 
   bool _isLoading = false;
   String? _selectedTurn;
-  String? _selectedClassId;
-  List<Class> _classes = [];
+  ClassSummary? _selectedClass = null;
+  List<ClassSummary> _classes = [];
 
   final List<String> _turns = ['Matutino', 'Vespertino', 'Integral'];
 
@@ -51,23 +54,23 @@ class _EditKidPageState extends State<EditKidPage> {
       // Busca criança e turmas em paralelo
       final results = await Future.wait([
         ApiService.getKidById(widget.kidId),
-        ApiService.getAllClasses(),
+        ApiService.getAllClasses(perPage: 25),
       ]);
 
       final kid = results[0] as Kid;
-      final classes = results[1] as List<Class>;
+      final classes = results[1] as List<ClassSummary>;
 
       if (mounted) {
         // Preenche controllers com dados da criança
-        libraryIdentifierController.text = kid.libraryIdentifier ?? '';
-        nameController.text = kid.name ?? '';
-        birthdayController.text = kid.birthday.toIso8601String().split('T')[0];
+        libraryIdentifierController.text = kid.libraryIdentifier;
+        nameController.text = kid.name;
+        birthdayController.text = DateFormat.yMd().format(kid.birthday);
         fatherNameController.text = kid.fatherName ?? '';
         motherNameController.text = kid.motherName ?? '';
-        cpfController.text = kid.cpf ?? '';
-        _selectedTurn = kid.turn ?? 'Matutino';
+        cpfController.text = kid.cpf;
+        _selectedTurn = kid.turn;
 
-        _selectedClassId = kid.cemeiClass?.id;
+        _selectedClass = kid.cemeiClass;
 
         // Preenche lista de turmas
         setState(() {
@@ -131,17 +134,21 @@ class _EditKidPageState extends State<EditKidPage> {
     if (!_validateForm()) return;
 
     setState(() => _isLoading = true);
+    final format = DateFormat('dd/mm/yyyy');
 
     try {
       final updateData = {
         'library_identifier': libraryIdentifierController.text.trim(),
         'name': nameController.text.trim(),
-        'birthday': birthdayController.text.trim(),
+        'birthday': format
+            .parse(birthdayController.text.trim())
+            .toIso8601String()
+            .split('T')[0],
         'father_name': fatherNameController.text.trim(),
         'mother_name': motherNameController.text.trim(),
         'cpf': cpfController.text.trim(),
         'turn': _selectedTurn ?? 'Matutino',
-        'class_id': _selectedClassId ?? '',
+        'class': {'id': _selectedClass?.id},
       };
 
       await ApiService.updateKid(widget.kidId, updateData);
@@ -263,10 +270,19 @@ class _EditKidPageState extends State<EditKidPage> {
                     // Dropdown de turmas
                     _buildClassDropdownField(
                       label: 'Turma',
-                      value: _selectedClassId,
+                      value: _selectedClass?.id,
                       classes: _classes,
-                      onChanged: (classId) =>
-                          setState(() => _selectedClassId = classId),
+                      onChanged: (value) {
+                        ClassSummary? selected;
+
+                        if (_classes.isNotEmpty && value != null) {
+                          selected = _classes.firstWhere(
+                            (item) => item.id == value,
+                          );
+                        }
+
+                        setState(() => _selectedClass = selected);
+                      },
                     ),
 
                     const SizedBox(height: 32),
@@ -425,7 +441,7 @@ class _EditKidPageState extends State<EditKidPage> {
   Widget _buildClassDropdownField({
     required String label,
     required String? value,
-    required List<Class> classes,
+    required List<ClassSummary> classes,
     required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(

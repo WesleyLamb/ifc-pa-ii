@@ -23,8 +23,6 @@ interface ClassRepositoryInterface
     public function updateClass(string $classId, UpdateClassDTO $dto): CEMEIClass;
     public function deleteClass(string $classId): void;
 
-    public function AddKid(string $classId, AddKidToClassDTO $dto): Kid;
-    public function deleteKid(string $classId, DeleteKidFromClassDTO $dto): void;
     public function addUser(string $classId, AddUserToClassDTO $dto): User;
     public function deleteUser(string $classId, DeleteUserFromClassDTO $dto): void;
 }

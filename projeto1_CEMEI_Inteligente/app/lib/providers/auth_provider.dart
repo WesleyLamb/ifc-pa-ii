@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:app/constants/strings.dart';
+import 'package:app/exceptions/http_response_exception.dart';
 import 'package:app/models/user.dart';
 import 'package:app/services/api_service.dart';
 import 'package:app/utils/api_request.dart' as ApiRequest;
 import 'package:app/utils/storage.dart' as Storage;
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
 
 class AuthProvider extends ChangeNotifier {
   User? _authUser;
@@ -52,8 +56,17 @@ class AuthProvider extends ChangeNotifier {
     if (jwt == null) {
       return null;
     }
-
-    return await getAuthUser();
+    User? user;
+    try {
+      user = await getAuthUser();
+    } on HttpResponseException catch (e) {
+      if (e.response.statusCode == 401) {
+        user = null;
+      } else {
+        rethrow;
+      }
+    }
+    return user;
   }
 
   Future<User> getAuthUser() async {
@@ -122,14 +135,18 @@ class AuthProvider extends ChangeNotifier {
 
       await Storage.remove(AppStrings.accessTokenStorageKey);
       await Storage.remove(AppStrings.refreshTokenStorageKey);
-      
     } catch (e, stackTrace) {
       _authUser = null;
       notifyListeners();
     }
   }
 
-  Future<User> register(String name, String email, String password, String passwordConfirmation) async {
+  Future<User> register(
+    String name,
+    String email,
+    String password,
+    String passwordConfirmation,
+  ) async {
     return await ApiService.register(
       name: name,
       email: email,

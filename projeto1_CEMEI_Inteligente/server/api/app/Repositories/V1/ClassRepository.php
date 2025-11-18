@@ -58,25 +58,6 @@ class ClassRepository implements ClassRepositoryInterface
         $this->getClassByIdOrFail($classId)->delete();
     }
 
-    public function AddKid(string $classId, AddKidToClassDTO $dto): Kid
-    {
-        $class = $this->getClassByIdOrFail($classId);
-
-        $classKid = new ClassKid();
-        $classKid->kid_id = $dto->kid->id;
-        $classKid->class_id = $class->id;
-
-        $classKid->save();
-
-        return $dto->kid;
-    }
-
-    public function deleteKid(string $classId, DeleteKidFromClassDTO $dto): void
-    {
-        $class = $this->getClassByIdOrFail($classId);
-        $classKid = ClassKid::where('class_id', $class->id)->where('kid_id', $dto->kid->id)->delete();
-    }
-
     public function addUser(string $classId, AddUserToClassDTO $dto): User
     {
         $class = $this->getClassByIdOrFail($classId);

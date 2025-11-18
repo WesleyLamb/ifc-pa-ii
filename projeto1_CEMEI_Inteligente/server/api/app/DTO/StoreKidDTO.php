@@ -35,7 +35,7 @@ class StoreKidDTO
         $dto->motherName = $request->get('mother_name');
         $dto->cpf = preg_replace('/\D+/', '', $request->get('cpf'));
         $dto->turn = $request->get('turn');
-        $dto->class = $classRepository->getClassByIdOrFail($request->get('class.id'));
+        $dto->class = $classRepository->getClassByIdOrFail($request->input('class.id'));
 
         return $dto;
     }

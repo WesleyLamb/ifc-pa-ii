@@ -1,5 +1,5 @@
+import 'package:app/models/class_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:app/models/class.dart';
 import 'package:app/services/api_service.dart';
 import 'kids_by_class_page.dart';
 import 'package:app/ui/components/colors/app_colors.dart';
@@ -12,8 +12,8 @@ class ClassesPage extends StatefulWidget {
 }
 
 class _ClassesPageState extends State<ClassesPage> {
-  List<Class> _classes = [];
-  List<Class> _filteredClasses = [];
+  List<ClassSummary> _classes = [];
+  List<ClassSummary> _filteredClasses = [];
   bool _isLoading = true;
   String _searchQuery = '';
 
@@ -25,7 +25,7 @@ class _ClassesPageState extends State<ClassesPage> {
 
   Future<void> _loadClasses() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final classes = await ApiService.getAllClasses();
       setState(() {
@@ -35,7 +35,7 @@ class _ClassesPageState extends State<ClassesPage> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -59,8 +59,9 @@ class _ClassesPageState extends State<ClassesPage> {
         _filteredClasses = _classes;
       } else {
         _filteredClasses = _classes
-            .where((cls) =>
-                cls.name.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (cls) => cls.name.toLowerCase().contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -123,72 +124,70 @@ class _ClassesPageState extends State<ClassesPage> {
           Expanded(
             child: _isLoading
                 ? const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primary,
-                    ),
+                    child: CircularProgressIndicator(color: AppColors.primary),
                   )
                 : _filteredClasses.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.class_outlined,
-                              size: 64,
-                              color: AppColors.light,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isEmpty
-                                  ? 'Nenhuma turma cadastrada'
-                                  : 'Nenhuma turma encontrada',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.dark.withOpacity(0.6),
-                              ),
-                            ),
-                            if (_searchQuery.isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    _searchQuery = '';
-                                    _filteredClasses = _classes;
-                                  });
-                                },
-                                icon: const Icon(Icons.clear),
-                                label: const Text('Limpar busca'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: AppColors.primary,
-                                ),
-                              ),
-                            ],
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.class_outlined,
+                          size: 64,
+                          color: AppColors.light,
                         ),
-                      )
-                    : RefreshIndicator(
-                        color: AppColors.primary,
-                        onRefresh: _loadClasses,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filteredClasses.length,
-                          itemBuilder: (context, index) {
-                            final turma = _filteredClasses[index];
-                            return ClassCard(
-                              classData: turma,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        KidsByClassPage(classData: turma),
-                                  ),
-                                );
-                              },
+                        const SizedBox(height: 16),
+                        Text(
+                          _searchQuery.isEmpty
+                              ? 'Nenhuma turma cadastrada'
+                              : 'Nenhuma turma encontrada',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.dark.withOpacity(0.6),
+                          ),
+                        ),
+                        if (_searchQuery.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _filteredClasses = _classes;
+                              });
+                            },
+                            icon: const Icon(Icons.clear),
+                            label: const Text('Limpar busca'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: _loadClasses,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filteredClasses.length,
+                      itemBuilder: (context, index) {
+                        final turma = _filteredClasses[index];
+                        return ClassCard(
+                          classData: turma,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    KidsByClassPage(classData: turma),
+                              ),
                             );
                           },
-                        ),
-                      ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -204,14 +203,11 @@ class _ClassesPageState extends State<ClassesPage> {
 }
 
 class ClassCard extends StatelessWidget {
-  final Class classData;
+  final ClassSummary classData;
   final VoidCallback onTap;
 
-  const ClassCard({
-    Key? key,
-    required this.classData,
-    required this.onTap,
-  }) : super(key: key);
+  const ClassCard({Key? key, required this.classData, required this.onTap})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -280,10 +276,7 @@ class ClassCard extends StatelessWidget {
               ),
 
               // Ícone de seta
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.light,
-              ),
+              const Icon(Icons.chevron_right, color: AppColors.light),
             ],
           ),
         ),

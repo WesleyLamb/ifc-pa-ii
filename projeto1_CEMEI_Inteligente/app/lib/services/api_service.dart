@@ -1,3 +1,4 @@
+import 'package:app/models/class_summary.dart';
 import 'package:app/models/kid_summary.dart';
 import 'package:app/utils/api_request.dart' as ApiRequest;
 import '../models/class.dart';
@@ -6,20 +7,20 @@ import '../models/user.dart';
 
 class ApiService {
   // Buscar todas as turmas
-  static Future<List<Class>> getAllClasses() async {
+  static Future<List<ClassSummary>> getAllClasses({int perPage = 10}) async {
     try {
-      final response = await ApiRequest.get('api/v1/classes');
+      final response = await ApiRequest.get('api/v1/classes?per_page=$perPage');
 
       if (response == null || response['data'] == null) {
         return [];
       }
 
       final List classesJson = response['data'];
-      final classes = <Class>[];
+      final classes = <ClassSummary>[];
 
       for (var json in classesJson) {
         try {
-          classes.add(Class.fromJson(json as Map<String, dynamic>));
+          classes.add(ClassSummary.fromJson(json as Map<String, dynamic>));
         } catch (e) {
           print('⚠️ Erro ao parsear turma: $json - $e');
           continue;

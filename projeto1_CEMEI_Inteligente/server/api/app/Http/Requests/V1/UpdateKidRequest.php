@@ -35,7 +35,7 @@ class UpdateKidRequest extends FormRequest
             'mother_name' => ['sometimes', 'nullable'],
             'cpf' => ['sometimes', Rule::unique('kids', 'cpf')->ignore($kid->uuid, 'uuid')],
             'turn' => ['sometimes', Rule::in('Matutino', 'Vespertino', 'Integral')],
-            'class_id' => ['sometimes', 'exists:classes,id']
+            'class.id' => ['sometimes', 'nullable', 'exists:classes,uuid']
         ];
     }
 }

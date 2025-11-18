@@ -43,6 +43,8 @@ class CEMEIClass extends Model
 
     protected function scopeFilter(Builder $q, FilterDTO $filter)
     {
-        return $q;
+        return $q = $q->where(function ($q) use ($filter) {
+            return $q->where('name', 'ilike', "%$filter->q%");
+        });
     }
 }

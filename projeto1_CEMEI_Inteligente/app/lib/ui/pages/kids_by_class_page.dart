@@ -1,13 +1,12 @@
+import 'package:app/models/class_summary.dart';
 import 'package:app/models/kid_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/components/colors/app_colors.dart';
-import 'package:app/models/class.dart';
-import 'package:app/models/kid.dart';
 import 'package:app/services/api_service.dart';
 import 'package:app/ui/components/cards/kid_card.dart';
 
 class KidsByClassPage extends StatefulWidget {
-  final Class classData;
+  final ClassSummary classData;
 
   const KidsByClassPage({super.key, required this.classData});
 

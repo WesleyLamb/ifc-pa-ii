@@ -72,24 +72,13 @@ class KidRepository implements KidRepositoryInterface
         if ($dto->turnWasChanged)
             $kid->turnString = $dto->turn;
 
+        if ($dto->classIdWasChanged)
+            $kid->class_id = $dto->class?->id;
+
         $kid->save();
 
-        if ($dto->classIdWasChanged && $dto->classId !== null) {
-            $kidIdBigInt = DB::table('kids')
-                ->where('uuid', $kid->uuid)
-                ->value('id');
 
-            DB::table('class_kids')
-                ->where('kid_id', $kidIdBigInt)
-                ->delete();
-
-            DB::table('class_kids')->insert([
-                'class_id' => $dto->classId,
-                'kid_id' => $kidIdBigInt
-            ]);
-        }
-
-        return $kid->refresh()->load('classes');
+        return $kid->refresh();
     }
 
     public function deleteKid(string $kidId): void
@@ -101,7 +90,7 @@ class KidRepository implements KidRepositoryInterface
 
     public function getByClassId(string $classId, FilterDTO $filter, PaginatorDTO $paginator): LengthAwarePaginator
     {
-        return Kid::filter($filter)->whereHas('classes', function($q) use ($classId) {
+        return Kid::filter($filter)->whereHas('class', function($q) use ($classId) {
             $q->where('uuid', $classId);
         })->paginate($paginator->perPage);
     }

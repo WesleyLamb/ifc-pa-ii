@@ -3,7 +3,11 @@
 namespace App\DTO;
 
 use App\Http\Requests\V1\UpdateKidRequest;
+use App\Models\CEMEIClass;
+use App\Repositories\Contracts\V1\ClassRepositoryInterface;
+use App\Repositories\V1\ClassRepository;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\App;
 
 class UpdateKidDTO
 {
@@ -28,51 +32,50 @@ class UpdateKidDTO
     public string $turn;
     public bool $turnWasChanged = false;
 
-    public string $classId;
+    public ?CEMEIClass $class;
     public bool $classIdWasChanged = false;
 
     public static function fromRequest(UpdateKidRequest $request): self
     {
+        /** @var ClassRepository $classRepository */
+        $classRepository = App::make(ClassRepositoryInterface::class);
+
         $dto = new self();
 
-        if ($request->has('library_identifier')) {
-            $dto->libraryIdentifierWasChanged = true;
-            $dto->libraryIdentifier = $request->get('library_identifier');
+        if ($dto->libraryIdentifierWasChanged = $request->has('library_identifier')) {
+            $dto->libraryIdentifier = $request->input('library_identifier');
         }
 
-        if ($request->has('name')) {
-            $dto->nameWasChanged = true;
-            $dto->name = $request->get('name');
+        if ($dto->nameWasChanged = $request->has('name')) {
+            $dto->name = $request->input('name');
         }
 
-        if ($request->has('birthday')) {
-            $dto->birthdayWasChanged = true;
-            $dto->birthday = new DateTimeImmutable($request->get('birthday'));
+        if ($dto->birthdayWasChanged = $request->has('birthday')) {
+            $dto->birthday = new DateTimeImmutable($request->input('birthday'));
         }
 
-        if ($request->has('father_name')) {
-            $dto->fatherNameWasChanged = true;
-            $dto->fatherName = $request->get('father_name');
+        if ($dto->fatherNameWasChanged = $request->has('father_name')) {
+            $dto->fatherName = $request->input('father_name');
         }
 
-        if ($request->has('mother_name')) {
-            $dto->motherNameWasChanged = true;
-            $dto->motherName = $request->get('mother_name');
+        if ($dto->motherNameWasChanged = $request->has('mother_name')) {
+            $dto->motherName = $request->input('mother_name');
         }
 
-        if ($request->has('cpf')) {
-            $dto->cpfWasChanged = true;
-            $dto->cpf = $request->get('cpf');
+        if ($dto->cpfWasChanged = $request->has('cpf')) {
+            $dto->cpf = $request->input('cpf');
         }
 
-        if ($request->has('turn')) {
-            $dto->turnWasChanged = true;
-            $dto->turn = $request->get('turn');
+        if ($dto->turnWasChanged = $request->has('turn')) {
+            $dto->turn = $request->input('turn');
         }
 
-        if ($request->has('class_id')) {
-            $dto->classIdWasChanged = true;
-            $dto->classId = $request->get('class_id');
+        if ($dto->classIdWasChanged = $request->has('class.id')) {
+            if ($request->input('class.id')) {
+                $dto->class = $classRepository->getClassByIdOrFail($request->input('class.id'));
+            } else {
+                $dto->class = null;
+            }
         }
 
         return $dto;

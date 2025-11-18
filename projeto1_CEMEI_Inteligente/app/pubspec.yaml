@@ -16,6 +16,7 @@ dependencies:
   barcode_scan2:
   mobile_scanner:
   qr_flutter:
+  intl:
 
 dev_dependencies:
   flutter_test:
